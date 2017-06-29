@@ -90,9 +90,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <ExecutablePath>C:\VulkanSDK\1.0.51.0\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\VulkanSDK\1.0.51.0\Third-Party\Include;C:\VulkanSDK\1.0.51.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\VulkanSDK\1.0.51.0\Lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(VK_SDK_PATH)\Bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>$(VK_SDK_PATH)\Third-Party\Include;$(VK_SDK_PATH)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(VK_SDK_PATH)\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
