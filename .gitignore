@@ -3,3 +3,10 @@
 ################################################################################
 
 /Debug
+/Release
+/Vulkan Vol2/Debug
+/Vulkan Vol2/Release
+/Vulkan Vol2/x64/Debug
+/Vulkan Vol2/x64/Release
+/x64
+/.vs/Vulkan Vol2/v15
