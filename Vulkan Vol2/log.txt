@@ -2,11 +2,11 @@ Start
 Win surface
 Added callback
 Added callback
-OBJ[0x1] : CREATE DebugReportCallbackEXT object 0x167a18c6290
+OBJ[0x1] : CREATE DebugReportCallbackEXT object 0x1c438498cc0
 Added callback
 Added callback
-OBJ[0x2] : CREATE PhysicalDevice object 0x167a41c8e40
-OBJ[0x3] : CREATE PhysicalDevice object 0x167a41c8a50
+OBJ[0x2] : CREATE PhysicalDevice object 0x1c43ac8afe0
+OBJ[0x3] : CREATE PhysicalDevice object 0x1c43ac8ab60
 AMD Radeon (TM) R5 M330
 2
 AMD Radeon(TM) R5 Graphics
@@ -61,16 +61,17 @@ Device Extension: VK_AMD_shader_explicit_vertex_parameter (C:\WINDOWS\System32\.
 Device Extension: VK_AMD_gcn_shader (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
 Device Extension: VK_AMD_draw_indirect_count (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
 Device Extension: VK_AMD_negative_viewport_height (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
-OBJ[0x5] : CREATE Device object 0x167ac90ff70
-OBJ[0x6] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x167ac910b50
-OBJ[0x7] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x167ac910ba8
-OBJ[0x8] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x167ac910c00
+OBJ[0x5] : CREATE Device object 0x1c43d012f60
+OBJ[0x6] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1c43d013b40
+OBJ[0x7] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1c43d013b98
+OBJ[0x8] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1c43d013bf0
 Generate Logic Devacie
-00000167AC90FF70
+000001C43D012F60
 Support!
 Finding format
 Finding present mode
 0000000000000001
+vkCreateSwapchainKHR: value of pCreateInfo->imageSharingMode (-858993460) does not fall within the begin..end range of the core VkSharingMode enumeration tokens and is not an extension added token
 OBJ[0x9] : CREATE SwapchainKHR object 0x2
 OBJ[0xa] : CREATE SwapchainImage object 0x3
 OBJ[0xb] : CREATE SwapchainImage object 0x4
@@ -82,39 +83,30 @@ OBJ[0xe] : CREATE CommandPool object 0x7
 Generate Queue Family
 OBJ[0xf] : CREATE CommandPool object 0x8
 Generate Queue Family
-OBJ[0x10] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a656fc90
-OBJ[0x11] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a6585270
-OBJ[0x12] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a658a440
+OBJ[0x10] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c43d071bc0
+OBJ[0x11] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c43d077190
+OBJ[0x12] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c43d07c360
 Generate Command Pool
-OBJ[0x13] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a65928e0
-OBJ[0x14] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a6596060
-OBJ[0x15] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a65997e0
+OBJ[0x13] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433d4ef0
+OBJ[0x14] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433d8670
+OBJ[0x15] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433dbdf0
 Generate Command Pool
-OBJ[0x16] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a65a0a40
-OBJ[0x17] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a65a3690
-OBJ[0x18] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x167a65a62e0
+OBJ[0x16] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433e01f0
+OBJ[0x17] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433e2e40
+OBJ[0x18] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433e5a90
 Generate Command Pool
 Generate
 OBJ[0x19] : CREATE Buffer object 0x9
 OBJ[0x1a] : CREATE DeviceMemory object 0xa
-OBJ[0x1b] : CREATE DescriptorSetLayout object 0xb
-OBJ[0x1c] : CREATE DescriptorPool object 0xc
-OBJ[0x1d] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT object 0xd
-OBJ[0x1e] : CREATE Buffer object 0xe
-OBJ[0x1f] : CREATE DeviceMemory object 0xf
-OBJ[0x20] : CREATE Buffer object 0x10
-OBJ[0x21] : CREATE DeviceMemory object 0x11
-OBJ[0x22] : CREATE ShaderModule object 0x12
-OBJ[0x23] : CREATE ShaderModule object 0x13
-OBJ[0x24] : CREATE PipelineLayout object 0x14
-OBJ[0x25] : CREATE RenderPass object 0x15
-OBJ[0x26] : CREATE PipelineCache object 0x16
-OBJ[0x27] : CREATE Pipeline object 0x17
-Done
-OBJ[0x28] : CREATE Semaphore object 0x18
-OBJ[0x29] : CREATE Semaphore object 0x19
-Prepare
-OBJ[0x2a] : CREATE ImageView object 0x1a
-OBJ[0x2b] : CREATE Image object 0x1b
-OBJ[0x2c] : CREATE DeviceMemory object 0x1c
-OBJ[0x2d] : CREATE ImageView object 0x1d
+OBJ[0x1b] : CREATE Buffer object 0xb
+OBJ[0x1c] : CREATE DeviceMemory object 0xc
+OBJ[0x1d] : CREATE DescriptorSetLayout object 0xd
+OBJ[0x1e] : CREATE DescriptorPool object 0xe
+OBJ[0x1f] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT object 0xf
+OBJ[0x20] : CREATE ShaderModule object 0x10
+OBJ[0x21] : CREATE ShaderModule object 0x11
+OBJ[0x22] : CREATE PipelineLayout object 0x12
+OBJ[0x23] : CREATE RenderPass object 0x13
+OBJ[0x24] : CREATE PipelineCache object 0x14
+vkCreateGraphicsPipelines(): the alphaToOne device feature is disabled: the alphaToOneEnable member of the VkPipelineMultisampleStateCreateInfo structure must be set to VK_FALSE. The spec valid usage text states 'If the alpha to one feature is not enabled, alphaToOneEnable must be VK_FALSE' (https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html#VUID-VkPipelineMultisampleStateCreateInfo-alphaToOneEnable-00785)
+OBJ[0x25] : CREATE Pipeline object 0x15

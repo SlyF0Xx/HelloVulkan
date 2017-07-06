@@ -16,6 +16,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "PrimitiveVertex.h"
+#include "PrimitiveModel.h"
+#include "PrimitivePipelineWrapper.h"
 
 #pragma comment (lib, "vulkan-1.lib")
 
@@ -240,7 +243,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		logger.checkResults(fvkCreateDebugReportCallbackEXT(foundation.GetInstance(), &debug_report_callback_info, nullptr, &debug_report_callback));
 		
 
-
 		foundation.CreateDevices();
 		logger.LogMessage("Generate Devacie");
 		
@@ -286,8 +288,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		const VkFormat DepthFormat = VK_FORMAT_D32_SFLOAT_S8_UINT;
 		
+		PrimitiveModel* mode = new PrimitiveModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
+
 		MatrixesBufer MatrixesMainBufer = MatrixesBufer(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
 		
+		PrimitivePipelineWrapper Pipe(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], foundation.GetSurfaceFormat(), DepthFormat, MatrixesMainBufer.Descriptors);
+		
+		Pipe.Models.push_back((AbstractModelBase<PrimitiveVertex>*)mode);
+
+
+
 		Model model(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], foundation.GetSurfaceFormat(), DepthFormat, MatrixesMainBufer.Descriptors);
 
 		logger.LogMessage("Done");

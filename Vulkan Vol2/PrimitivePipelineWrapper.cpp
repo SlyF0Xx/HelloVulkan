@@ -1,6 +1,6 @@
-#include "Model.h"
+#include "PrimitivePipelineWrapper.h"
 
-VkShaderModule Model::loadSPIRVShader(std::string filename, VkDevice device)
+VkShaderModule PrimitivePipelineWrapper::loadSPIRVShader(std::string filename)
 {
 	size_t shaderSize;
 	char* shaderCode;
@@ -38,7 +38,7 @@ VkShaderModule Model::loadSPIRVShader(std::string filename, VkDevice device)
 		moduleCreateInfo.pCode = (uint32_t*)shaderCode;
 
 		VkShaderModule shaderModule;
-		logger->checkResults(vkCreateShaderModule(device, &moduleCreateInfo, NULL, &shaderModule));
+		logger->checkResults(vkCreateShaderModule(Device.GetLogicDevice(), &moduleCreateInfo, NULL, &shaderModule));
 
 		delete[] shaderCode;
 
@@ -51,38 +51,15 @@ VkShaderModule Model::loadSPIRVShader(std::string filename, VkDevice device)
 	}
 }
 
-IndexBuffer Model::GetIndexBuf()
-{
-	return IndexBuf;
-}
 
-VertexBuffer Model::GetVertBuf()
-{
-	return VertBuf;
-}
-
-VkPipelineLayout Model::GetPipelineLayout()
-{
-	return PipelineLayout;
-}
-
-VkRenderPass Model::GetRenderPass()
-{
-	return RenderPass;
-}
-
-VkPipeline Model::GetPipeline()
-{
-	return Pipeline;
-}
-
-Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkFormat DepthFormat, vector<VkDescriptorSetLayout> Descriptors) : Device(device),
-																														VertBuf(device), IndexBuf(device)
+PrimitivePipelineWrapper::PrimitivePipelineWrapper(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkFormat DepthFormat, vector<VkDescriptorSetLayout> Descriptors)
+																											: Device(device), 
+																												AbstractPipelineWrapper<PrimitiveVertex>()
 {
 	this->logger = logger;
 
-	VkShaderModule VertexShader = loadSPIRVShader("Text.vert.spv", device.GetLogicDevice());
-	VkShaderModule PixelShader = loadSPIRVShader("Text.frag.spv", device.GetLogicDevice());
+	VkShaderModule VertexShader = loadSPIRVShader("Text.vert.spv");
+	VkShaderModule PixelShader = loadSPIRVShader("Text.frag.spv");
 
 	vector<VkPipelineShaderStageCreateInfo> Stages(2);
 	//Vertex Stage
@@ -94,7 +71,7 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	Stages[0].pName = "main";
 	Stages[0].pSpecializationInfo = NULL; //Забавная штука, позволяет инициализировать шейдерные константы
 
-	//Pixel Stage
+										  //Pixel Stage
 	Stages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	Stages[1].pNext = NULL;
 	Stages[1].flags = 0;
@@ -103,11 +80,10 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	Stages[1].pName = "main";
 	Stages[1].pSpecializationInfo = NULL; //Забавная штука, позволяет инициализировать шейдерные константы
 
-	
-	
+										  //TODO есть вариант перенести это в абстракцию, заменив sizeof (PrimitiveVertex) на sizeof(T)
 	VkVertexInputBindingDescription VertexInputDesc{};
 	VertexInputDesc.binding = 0;
-	VertexInputDesc.stride = sizeof(VertexBuffer::Vertex);
+	VertexInputDesc.stride = sizeof(PrimitiveVertex);
 	VertexInputDesc.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 	//Описывает связи между шейдером и хостом. Для каждой переменной, передающейся через конвейер
@@ -127,9 +103,6 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	VertexInputInfo.vertexAttributeDescriptionCount = VertexInputAttrDesc.size();
 	VertexInputInfo.pVertexAttributeDescriptions = VertexInputAttrDesc.data();
 
-
-
-
 	VkPipelineLayoutCreateInfo LayoutInfo{};
 	LayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	LayoutInfo.pNext = NULL;
@@ -140,7 +113,7 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	LayoutInfo.pPushConstantRanges = NULL;
 
 
-	vkCreatePipelineLayout(device.GetLogicDevice(), &LayoutInfo, nullptr, &PipelineLayout);
+	vkCreatePipelineLayout(Device.GetLogicDevice(), &LayoutInfo, nullptr, &PipelineLayout);
 
 
 
@@ -153,15 +126,15 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 
 
 
-	/*
-	VkViewport Viewport;
-	Viewport.x = 0;
-	Viewport.y = 0;
-	Viewport.minDepth = 0.1;
-	Viewport.maxDepth = 1000.0;
-	Viewport.height = Extent.height;
-	Viewport.width = Extent.width;
-	*/
+														 /*
+														 VkViewport Viewport;
+														 Viewport.x = 0;
+														 Viewport.y = 0;
+														 Viewport.minDepth = 0.1;
+														 Viewport.maxDepth = 1000.0;
+														 Viewport.height = Extent.height;
+														 Viewport.width = Extent.width;
+														 */
 	VkPipelineViewportStateCreateInfo ViewportStateInfo{};
 	ViewportStateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
 	ViewportStateInfo.pNext = NULL;
@@ -211,12 +184,12 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	DepthStensilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
 	DepthStensilInfo.depthBoundsTestEnable = VK_FALSE; //Если VK_TRUE, то делает отдельный z тест на minDepthBounds и maxDepthBounds
 	DepthStensilInfo.stencilTestEnable = VK_FALSE; // Разобраться и добавить - классная, вроде, штука
-	
+
 	DepthStensilInfo.back.failOp = VK_STENCIL_OP_KEEP;
 	DepthStensilInfo.back.passOp = VK_STENCIL_OP_KEEP;
 	DepthStensilInfo.back.depthFailOp = VK_STENCIL_OP_KEEP;
 	DepthStensilInfo.back.compareOp = VK_COMPARE_OP_ALWAYS;
-	
+
 	DepthStensilInfo.front = DepthStensilInfo.back;
 
 
@@ -232,7 +205,7 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	//ColorBlendInfo.logicOpEnable = VK_FALSE; //Насколько я понял, можно сделать операцию по сравнению с текущим значением в кадре
 	ColorBlendInfo.attachmentCount = 1;
 	ColorBlendInfo.pAttachments = &AttachState;
-	
+
 
 
 	vector<VkDynamicState> states;
@@ -259,7 +232,7 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	Attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 	Attachments[0].initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	Attachments[0].finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
- 
+
 	Attachments.push_back(VkAttachmentDescription());
 	Attachments[1].flags = 0;
 	Attachments[1].format = DepthFormat;
@@ -297,12 +270,12 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 
 
 
-																			// Setup subpass dependencies
-																			// These will add the implicit ttachment layout transitionss specified by the attachment descriptions
-																			// The actual usage layout is preserved through the layout specified in the attachment reference		
-																			// Each subpass dependency will introduce a memory and execution dependency between the source and dest subpass described by
-																			// srcStageMask, dstStageMask, srcAccessMask, dstAccessMask (and dependencyFlags is set)
-																			// Note: VK_SUBPASS_EXTERNAL is a special constant that refers to all commands executed outside of the actual renderpass)
+																				// Setup subpass dependencies
+																				// These will add the implicit ttachment layout transitionss specified by the attachment descriptions
+																				// The actual usage layout is preserved through the layout specified in the attachment reference		
+																				// Each subpass dependency will introduce a memory and execution dependency between the source and dest subpass described by
+																				// srcStageMask, dstStageMask, srcAccessMask, dstAccessMask (and dependencyFlags is set)
+																				// Note: VK_SUBPASS_EXTERNAL is a special constant that refers to all commands executed outside of the actual renderpass)
 	std::array<VkSubpassDependency, 2> dependencies;
 
 	// First dependency at the start of the renderpass
@@ -338,7 +311,7 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	RenderPassInfo.dependencyCount = dependencies.size();
 	RenderPassInfo.pDependencies = dependencies.data();
 
-	vkCreateRenderPass(device.GetLogicDevice(), &RenderPassInfo, nullptr, &RenderPass);
+	vkCreateRenderPass(Device.GetLogicDevice(), &RenderPassInfo, nullptr, &RenderPass);
 
 
 	VkPipelineCacheCreateInfo CacheInfo{};
@@ -349,7 +322,7 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	CacheInfo.pInitialData = NULL;
 
 	VkPipelineCache Cache;
-	vkCreatePipelineCache(device.GetLogicDevice(), &CacheInfo, nullptr, &Cache);
+	vkCreatePipelineCache(Device.GetLogicDevice(), &CacheInfo, nullptr, &Cache);
 
 	VkGraphicsPipelineCreateInfo PipelineInfo{};
 	//PipelineInfo.push_back(VkGraphicsPipelineCreateInfo());
@@ -372,10 +345,10 @@ Model::Model(Logger *logger, LogicDeviceWrapper device, VkSurfaceFormatKHR Surfa
 	PipelineInfo.basePipelineHandle = NULL;
 	PipelineInfo.basePipelineIndex = NULL;
 
-	logger->checkResults(vkCreateGraphicsPipelines(device.GetLogicDevice(), Cache, 1, &PipelineInfo, nullptr, &Pipeline));
+	logger->checkResults(vkCreateGraphicsPipelines(Device.GetLogicDevice(), Cache, 1, &PipelineInfo, nullptr, &Pipeline));
 }
 
 
-Model::~Model()
+PrimitivePipelineWrapper::~PrimitivePipelineWrapper()
 {
 }

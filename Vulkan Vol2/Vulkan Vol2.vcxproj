@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <ExecutablePath>C:\VulkanSDK\1.0.51.0\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\VulkanSDK\1.0.51.0\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\VulkanSDK\1.0.51.0\Third-Party\Include;C:\VulkanSDK\1.0.51.0\Include;$(IncludePath)</IncludePath>
     <LibraryPath>C:\VulkanSDK\1.0.51.0\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,22 +152,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractVertex.cpp" />
     <ClCompile Include="CommandPoolWrapper.cpp" />
     <ClCompile Include="Foundation.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LogicDeviceWrapper.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PhysDeviceWrapper.cpp" />
+    <ClCompile Include="PrimitiveModel.cpp" />
+    <ClCompile Include="PrimitivePipelineWrapper.cpp" />
+    <ClCompile Include="PrimitiveVertex.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="SwapchinWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractModel.hpp" />
+    <ClInclude Include="AbstractModelBase.hpp" />
+    <ClInclude Include="AbstractPipelineWrapper.hpp" />
+    <ClInclude Include="AbstractVertex.h" />
+    <ClInclude Include="PrimitiveModel.h" />
+    <ClInclude Include="PrimitivePipelineWrapper.h" />
+    <ClInclude Include="VertexBufferWrapper.hpp" />
     <ClInclude Include="CommandPoolWrapper.h" />
     <ClInclude Include="Foundation.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="LogicDeviceWrapper.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PhysDeviceWrapper.h" />
+    <ClInclude Include="PrimitiveVertex.h" />
     <ClInclude Include="SwapchinWrapper.h" />
   </ItemGroup>
   <ItemGroup>
