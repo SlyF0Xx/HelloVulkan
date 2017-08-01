@@ -1,39 +1,19 @@
 #pragma once
-#ifdef _WIN32
-#define VK_USE_PLATFORM_WIN32_KHR
-#endif // _WIN32
-
-#include <vulkan\vulkan.h>
-#include <vulkan\vk_platform.h>
-#include <vector>
-#include "Logger.h"
-#include <string>
-#include "Foundation.h"
-#include "AbstractVertex.h"
-
-#pragma comment (lib, "vulkan-1.lib")
-
-using namespace std;
-
+#include "AbstractVertexBufferWrapper.hpp"
 
 template<class T>
-class VertexBufferWrapper
+class PrimitiveVertexBufferWrapper :
+	public AbstractVertexBufferWrapper<T>
 {
-	static_assert(std::is_base_of<AbstractVertex, T >::value, "T does not extend OtherClass");
-private:
-	vector<T> Vertexes;
-	VkBuffer Buffer;
-	VkDeviceMemory Memory;
-	LogicDeviceWrapper Device;
 public:
 	void WriteVertexes();
-	void SetVetrexes(vector<T> vertexes);
-	VertexBufferWrapper(LogicDeviceWrapper device);
-	~VertexBufferWrapper();
+	PrimitiveVertexBufferWrapper(LogicDeviceWrapper device, vector<T> vertexes);
+	~PrimitiveVertexBufferWrapper();
 };
 
+
 template<class T>
-inline void VertexBufferWrapper<T>::WriteVertexes()
+inline void PrimitiveVertexBufferWrapper<T>::WriteVertexes()
 {
 	VkBufferCreateInfo VertexBufferInfo;
 	VertexBufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -84,17 +64,11 @@ inline void VertexBufferWrapper<T>::WriteVertexes()
 }
 
 template<class T>
-inline void VertexBufferWrapper<T>::SetVetrexes(vector<T> vertexes)
-{
-	Vertexes = vertexes;
-}
-
-template<class T>
-inline VertexBufferWrapper<T>::VertexBufferWrapper(LogicDeviceWrapper device) : Device(device)
+PrimitiveVertexBufferWrapper<T>::PrimitiveVertexBufferWrapper(LogicDeviceWrapper device, vector<T> vertexes): AbstractVertexBufferWrapper<T>(device, vertexes)
 {
 }
 
 template<class T>
-inline VertexBufferWrapper<T>::~VertexBufferWrapper()
+inline PrimitiveVertexBufferWrapper<T>::~PrimitiveVertexBufferWrapper()
 {
 }

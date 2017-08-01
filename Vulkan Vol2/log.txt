@@ -2,11 +2,11 @@ Start
 Win surface
 Added callback
 Added callback
-OBJ[0x1] : CREATE DebugReportCallbackEXT object 0x1c438498cc0
+OBJ[0x1] : CREATE DebugReportCallbackEXT object 0x1ff7d0dace0
 Added callback
 Added callback
-OBJ[0x2] : CREATE PhysicalDevice object 0x1c43ac8afe0
-OBJ[0x3] : CREATE PhysicalDevice object 0x1c43ac8ab60
+OBJ[0x2] : CREATE PhysicalDevice object 0x1ff7f0df0d0
+OBJ[0x3] : CREATE PhysicalDevice object 0x1ff7f0df370
 AMD Radeon (TM) R5 M330
 2
 AMD Radeon(TM) R5 Graphics
@@ -42,6 +42,12 @@ Device Extension: VK_AMD_shader_explicit_vertex_parameter (Unknown) version 0.0.
 Device Extension: VK_AMD_gcn_shader (Unknown) version 0.0.1
 Device Extension: VK_AMD_draw_indirect_count (Unknown) version 0.0.1
 Device Extension: VK_AMD_negative_viewport_height (Unknown) version 0.0.1
+Loading layer library C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_screenshot.dll
+Insert device layer VK_LAYER_LUNARG_screenshot (C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_screenshot.dll)
+Loading layer library C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_monitor.dll
+Insert device layer VK_LAYER_LUNARG_monitor (C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_monitor.dll)
+Loading layer library C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_api_dump.dll
+Insert device layer VK_LAYER_LUNARG_api_dump (C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_api_dump.dll)
 Loading layer library C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_unique_objects.dll
 Insert device layer VK_LAYER_GOOGLE_unique_objects (C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_unique_objects.dll)
 Loading layer library C:\VulkanSDK\1.0.51.0\Bin\.\VkLayer_core_validation.dll
@@ -61,17 +67,16 @@ Device Extension: VK_AMD_shader_explicit_vertex_parameter (C:\WINDOWS\System32\.
 Device Extension: VK_AMD_gcn_shader (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
 Device Extension: VK_AMD_draw_indirect_count (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
 Device Extension: VK_AMD_negative_viewport_height (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
-OBJ[0x5] : CREATE Device object 0x1c43d012f60
-OBJ[0x6] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1c43d013b40
-OBJ[0x7] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1c43d013b98
-OBJ[0x8] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1c43d013bf0
+OBJ[0x5] : CREATE Device object 0x1ff7f6b7fb0
+OBJ[0x6] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1ff7f6b8b90
+OBJ[0x7] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1ff7f6b8be8
+OBJ[0x8] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1ff7f6b8c40
 Generate Logic Devacie
-000001C43D012F60
+000001FF7F6B7FB0
 Support!
 Finding format
 Finding present mode
 0000000000000001
-vkCreateSwapchainKHR: value of pCreateInfo->imageSharingMode (-858993460) does not fall within the begin..end range of the core VkSharingMode enumeration tokens and is not an extension added token
 OBJ[0x9] : CREATE SwapchainKHR object 0x2
 OBJ[0xa] : CREATE SwapchainImage object 0x3
 OBJ[0xb] : CREATE SwapchainImage object 0x4
@@ -83,30 +88,573 @@ OBJ[0xe] : CREATE CommandPool object 0x7
 Generate Queue Family
 OBJ[0xf] : CREATE CommandPool object 0x8
 Generate Queue Family
-OBJ[0x10] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c43d071bc0
-OBJ[0x11] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c43d077190
-OBJ[0x12] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c43d07c360
+OBJ[0x10] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f70f170
+OBJ[0x11] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f714340
+OBJ[0x12] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f719510
+OBJ[0x13] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f71e6e0
+OBJ[0x14] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f7238b0
+OBJ[0x15] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f728a80
 Generate Command Pool
-OBJ[0x13] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433d4ef0
-OBJ[0x14] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433d8670
-OBJ[0x15] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433dbdf0
+OBJ[0x16] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f734a00
+OBJ[0x17] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f738180
+OBJ[0x18] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f73b900
+OBJ[0x19] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f73f080
+OBJ[0x1a] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f742800
+OBJ[0x1b] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f745f80
 Generate Command Pool
-OBJ[0x16] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433e01f0
-OBJ[0x17] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433e2e40
-OBJ[0x18] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1c4433e5a90
+OBJ[0x1c] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f74f4d0
+OBJ[0x1d] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f752120
+OBJ[0x1e] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f754d70
+OBJ[0x1f] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f7579c0
+OBJ[0x20] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f75a610
+OBJ[0x21] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ff7f75d260
 Generate Command Pool
 Generate
-OBJ[0x19] : CREATE Buffer object 0x9
-OBJ[0x1a] : CREATE DeviceMemory object 0xa
-OBJ[0x1b] : CREATE Buffer object 0xb
-OBJ[0x1c] : CREATE DeviceMemory object 0xc
-OBJ[0x1d] : CREATE DescriptorSetLayout object 0xd
-OBJ[0x1e] : CREATE DescriptorPool object 0xe
-OBJ[0x1f] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT object 0xf
-OBJ[0x20] : CREATE ShaderModule object 0x10
-OBJ[0x21] : CREATE ShaderModule object 0x11
-OBJ[0x22] : CREATE PipelineLayout object 0x12
-OBJ[0x23] : CREATE RenderPass object 0x13
-OBJ[0x24] : CREATE PipelineCache object 0x14
-vkCreateGraphicsPipelines(): the alphaToOne device feature is disabled: the alphaToOneEnable member of the VkPipelineMultisampleStateCreateInfo structure must be set to VK_FALSE. The spec valid usage text states 'If the alpha to one feature is not enabled, alphaToOneEnable must be VK_FALSE' (https://www.khronos.org/registry/vulkan/specs/1.0/html/vkspec.html#VUID-VkPipelineMultisampleStateCreateInfo-alphaToOneEnable-00785)
-OBJ[0x25] : CREATE Pipeline object 0x15
+OBJ[0x22] : CREATE Buffer object 0x9
+OBJ[0x23] : CREATE DeviceMemory object 0xa
+OBJ[0x24] : CREATE Buffer object 0xb
+OBJ[0x25] : CREATE DeviceMemory object 0xc
+OBJ[0x26] : CREATE DescriptorSetLayout object 0xd
+OBJ[0x27] : CREATE DescriptorPool object 0xe
+OBJ[0x28] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT object 0xf
+OBJ[0x29] : CREATE DescriptorSetLayout object 0x10
+OBJ[0x2a] : CREATE ShaderModule object 0x11
+OBJ[0x2b] : CREATE ShaderModule object 0x12
+OBJ[0x2c] : CREATE PipelineLayout object 0x13
+OBJ[0x2d] : CREATE RenderPass object 0x14
+OBJ[0x2e] : CREATE PipelineCache object 0x15
+OBJ[0x2f] : CREATE Pipeline object 0x16
+Done
+OBJ[0x30] : CREATE Semaphore object 0x17
+OBJ[0x31] : CREATE Semaphore object 0x18
+Prepare
+OBJ[0x32] : CREATE ImageView object 0x19
+OBJ[0x33] : CREATE Image object 0x1a
+OBJ[0x34] : CREATE DeviceMemory object 0x1b
+OBJ[0x35] : CREATE ImageView object 0x1c
+OBJ[0x36] : CREATE Framebuffer object 0x1d
+Descriptor Set 0xf bound on pipeline VK_PIPELINE_BIND_POINT_GRAPHICS
+OBJ[0x37] : CREATE ImageView object 0x1e
+OBJ[0x38] : CREATE Image object 0x1f
+OBJ[0x39] : CREATE DeviceMemory object 0x20
+OBJ[0x3a] : CREATE ImageView object 0x21
+OBJ[0x3b] : CREATE Framebuffer object 0x22
+Descriptor Set 0xf bound on pipeline VK_PIPELINE_BIND_POINT_GRAPHICS
+OBJ[0x3c] : CREATE ImageView object 0x23
+OBJ[0x3d] : CREATE Image object 0x24
+OBJ[0x3e] : CREATE DeviceMemory object 0x25
+OBJ[0x3f] : CREATE ImageView object 0x26
+OBJ[0x40] : CREATE Framebuffer object 0x27
+Descriptor Set 0xf bound on pipeline VK_PIPELINE_BIND_POINT_GRAPHICS
+All prepare for draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw
+Start draw

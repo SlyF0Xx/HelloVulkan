@@ -29,5 +29,7 @@ public:
 	vector<CommandPoolWrapper> &GetCommandPools();
 	LogicDeviceWrapper(VkDevice LogicDevice, vector<FamilyOfQueue> queuesFamilyIndexes, Logger* logger);
 	~LogicDeviceWrapper();
+
+	LogicDeviceWrapper() {};
 };
 

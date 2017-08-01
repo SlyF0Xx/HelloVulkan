@@ -60,15 +60,27 @@ Foundation::Foundation(Logger* logger)
 	vector<char *> Extensions;
 
 	Extensions.push_back("VK_KHR_surface");
+#ifdef _DEBUG
 	Extensions.push_back("VK_EXT_debug_report");
+#endif // DEBUG
 #ifdef _WIN32
 	Extensions.push_back("VK_KHR_win32_surface");
 	logger->LogMessage("Win surface");
 #endif // WIN32
 
 	vector<char *> Layouts;
-	
+#ifdef _DEBUG
 	Layouts.push_back("VK_LAYER_LUNARG_standard_validation");
+	Layouts.push_back("VK_LAYER_LUNARG_api_dump");
+	Layouts.push_back("VK_LAYER_LUNARG_core_validation");
+	Layouts.push_back("VK_LAYER_LUNARG_monitor");
+	Layouts.push_back("VK_LAYER_LUNARG_object_tracker");
+	Layouts.push_back("VK_LAYER_LUNARG_parameter_validation");
+	Layouts.push_back("VK_LAYER_LUNARG_screenshot");
+	Layouts.push_back("VK_LAYER_GOOGLE_threading");
+	Layouts.push_back("VK_LAYER_GOOGLE_unique_objects");
+#endif // DEBUG
+
 	//-------------------------------------------------------
 
 	VkInstanceCreateInfo InstanceInfo;
@@ -189,6 +201,7 @@ void Foundation::addSwapchain(VkPhysicalDevice physicalDevice, VkSurfaceKHR surf
 	SwapchainInfo.imageArrayLayers = 1;
 	SwapchainInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 	
+	vector<uint32_t> indexes;
 	if (logicDevice->GetQueuesFamilies().size() == 1 && logicDevice->GetQueuesFamilies()[0].Count == 1)
 	{
 		SwapchainInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -197,7 +210,7 @@ void Foundation::addSwapchain(VkPhysicalDevice physicalDevice, VkSurfaceKHR surf
 	}
 	else
 	{
-		vector<uint32_t> indexes;
+		SwapchainInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
 		for (auto i : logicDevice->GetQueuesFamilies())
 		{
 			indexes.push_back(i.Index);

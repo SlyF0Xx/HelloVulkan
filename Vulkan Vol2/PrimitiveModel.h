@@ -1,13 +1,15 @@
 #pragma once
 #include "AbstractModel.hpp"
 #include "PrimitiveVertex.h"
+#include "PrimitiveVertexBufferWrapper.h"
 
 class PrimitiveModel :
-	public AbstractModel<PrimitiveVertex, PrimitiveModel>
+	public AbstractModel<PrimitiveVertex, PrimitiveVertexBufferWrapper<PrimitiveVertex>>
 {
 public:
 	PrimitiveModel(LogicDeviceWrapper Device);
-	void Draw();
+	void Draw(VkCommandBuffer CmdBuffer);
 	~PrimitiveModel();
-	void Init();
+protected:
+	static vector<PrimitiveVertex> Init();
 };

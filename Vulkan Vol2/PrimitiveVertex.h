@@ -6,6 +6,7 @@ class PrimitiveVertex :
 public:
 	float position[3];
 	PrimitiveVertex(float x, float y, float z);
+	PrimitiveVertex();
 	~PrimitiveVertex();
 };
 

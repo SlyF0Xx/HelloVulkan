@@ -25,5 +25,7 @@ public:
 template<class T>
 inline void Logger::LogMessage(T message)
 {
+#ifdef _DEBUG
 	flog << message << endl;
+#endif // _DEBUG
 }

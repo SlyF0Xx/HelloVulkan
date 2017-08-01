@@ -3,7 +3,10 @@
 
 Logger::Logger()
 {
+#ifdef _DEBUG
 	flog.open("log.txt");
+#endif // _DEBUG
+
 }
 
 void Logger::checkResults(VkResult result)

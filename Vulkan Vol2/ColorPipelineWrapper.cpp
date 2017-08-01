@@ -1,15 +1,16 @@
-#include "PrimitivePipelineWrapper.h"
+#include "ColorPipelineWrapper.h"
 
-vector<VkVertexInputBindingDescription> PrimitivePipelineWrapper::InitVertexInputDesc()
+
+vector<VkVertexInputBindingDescription> ColorPipelineWrapper::InitVertexInputDesc()
 {
 	vector<VkVertexInputBindingDescription> VertexInputDesc(1);
 	VertexInputDesc[0].binding = 0;
-	VertexInputDesc[0].stride = sizeof(PrimitiveVertex);
+	VertexInputDesc[0].stride = sizeof(ColorVertex);
 	VertexInputDesc[0].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 	return VertexInputDesc;
 }
 
-vector<VkVertexInputAttributeDescription> PrimitivePipelineWrapper::InitVertexInputAttrDesc()
+vector<VkVertexInputAttributeDescription> ColorPipelineWrapper::InitVertexInputAttrDesc()
 {
 	//Описывает связи между шейдером и хостом. Для каждой переменной, передающейся через конвейер
 	vector<VkVertexInputAttributeDescription> VertexInputAttrDesc;
@@ -18,10 +19,16 @@ vector<VkVertexInputAttributeDescription> PrimitivePipelineWrapper::InitVertexIn
 	VertexInputAttrDesc[0].binding = 0;
 	VertexInputAttrDesc[0].offset = 0;
 	VertexInputAttrDesc[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+
+	VertexInputAttrDesc.push_back(VkVertexInputAttributeDescription());
+	VertexInputAttrDesc[1].location = 1;
+	VertexInputAttrDesc[1].binding = 0;
+	VertexInputAttrDesc[1].offset = 12;
+	VertexInputAttrDesc[1].format = VK_FORMAT_R32G32B32A32_SFLOAT;
 	return VertexInputAttrDesc;
 }
 
-vector<VkAttachmentDescription> PrimitivePipelineWrapper::InitAttachments(VkSurfaceFormatKHR SurfaceFormat)
+vector<VkAttachmentDescription> ColorPipelineWrapper::InitAttachments(VkSurfaceFormatKHR SurfaceFormat)
 {
 	vector<VkAttachmentDescription> Attachments;
 	Attachments.push_back(VkAttachmentDescription());
@@ -48,7 +55,7 @@ vector<VkAttachmentDescription> PrimitivePipelineWrapper::InitAttachments(VkSurf
 	return Attachments;
 }
 
-vector<VkDescriptorSetLayout> PrimitivePipelineWrapper::InitDescriptorSetsLayout(LogicDeviceWrapper device)
+vector<VkDescriptorSetLayout> ColorPipelineWrapper::InitDescriptorSetsLayout(LogicDeviceWrapper device)
 {
 	vector<VkDescriptorSetLayoutBinding> Bindings;
 	Bindings.push_back(VkDescriptorSetLayoutBinding());
@@ -71,7 +78,7 @@ vector<VkDescriptorSetLayout> PrimitivePipelineWrapper::InitDescriptorSetsLayout
 	return Descriptors;
 }
 
-vector<VkDescriptorSet> PrimitivePipelineWrapper::InitDescriptors(LogicDeviceWrapper device)
+vector<VkDescriptorSet> ColorPipelineWrapper::InitDescriptors(LogicDeviceWrapper device)
 {
 	vector<VkDescriptorSetLayout> Descriptors = InitDescriptorSetsLayout(device);
 
@@ -104,7 +111,7 @@ vector<VkDescriptorSet> PrimitivePipelineWrapper::InitDescriptors(LogicDeviceWra
 	return Descriptor;
 }
 
-void PrimitivePipelineWrapper::UpdateMatrixDescriptor(VkBuffer MatrixBuffer)
+void ColorPipelineWrapper::UpdateMatrixDescriptor(VkBuffer MatrixBuffer)
 {
 	VkDescriptorBufferInfo BufferDescriptor;
 	BufferDescriptor.buffer = MatrixBuffer;
@@ -126,18 +133,18 @@ void PrimitivePipelineWrapper::UpdateMatrixDescriptor(VkBuffer MatrixBuffer)
 	vkUpdateDescriptorSets(Device.GetLogicDevice(), 1, &WriteDescriptorSetInfo, 0, nullptr);
 }
 
-PrimitivePipelineWrapper::PrimitivePipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer MatrixBuffer):
-	PrimitiveBasePipelineWrapper<PrimitiveVertex, 1>("Text.vert.spv", "Text.frag.spv", InitVertexInputDesc(), InitVertexInputAttrDesc(), InitAttachments(SurfaceFormat),
+ColorPipelineWrapper::ColorPipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer MatrixBuffer) :
+	PrimitiveBasePipelineWrapper<ColorVertex, 1>("Text.vert.spv", "Text.frag.spv", InitVertexInputDesc(), InitVertexInputAttrDesc(), InitAttachments(SurfaceFormat),
 		logger, device, InitDescriptorSetsLayout(device), InitDescriptors(device))
 {
 	UpdateMatrixDescriptor(MatrixBuffer);
 }
 
-PrimitivePipelineWrapper::~PrimitivePipelineWrapper()
+ColorPipelineWrapper::~ColorPipelineWrapper()
 {
 }
 
-void PrimitivePipelineWrapper::_Draw(VkCommandBuffer CmdBuffer, vector<VkImageView>ImageViews)
+void ColorPipelineWrapper::_Draw(VkCommandBuffer CmdBuffer, vector<VkImageView>ImageViews)
 {
 	vector<VkImageView> IV(ImageViews.begin(), ImageViews.end());
 

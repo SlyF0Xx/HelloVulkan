@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="AbstractModel&lt;T, VertexBuffer&gt;">
+    <Position X="1.25" Y="4.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAACAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AbstractModel.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AbstractModelBase&lt;T&gt;" Collapsed="true">
+    <Position X="1.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAgAAAACAAAAAAA=</HashCode>
+      <FileName>AbstractModelBase.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AbstractPipelineWrapper&lt;T, CountOfOutImages&gt;" Collapsed="true">
+    <Position X="9.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAwAAAAAAAgAAAAAAAIAgAAgAAAAAAAA=</HashCode>
+      <FileName>AbstractPipelineWrapper.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AbstractVertex" Collapsed="true">
+    <Position X="3.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAA=</HashCode>
+      <FileName>AbstractVertex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PrimitiveModel" Collapsed="true">
+    <Position X="1.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAgAAAAAAAAAAAQAAAAAAAAACAAAAAAA=</HashCode>
+      <FileName>PrimitiveModel.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PrimitivePipelineWrapper" Collapsed="true">
+    <Position X="9.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAACCgIAEAAAAABAAAAAAAgAAQIAAAAAACA=</HashCode>
+      <FileName>PrimitivePipelineWrapper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AbstractVertexBufferWrapper&lt;T&gt;" Collapsed="true">
+    <Position X="5.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgABAgAAAAAgAAAQAAEAAgAAAAAAQAA=</HashCode>
+      <FileName>AbstractVertexBufferWrapper.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CommandPoolWrapper" Collapsed="true">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAACCAAAAAACAEAAAAAAAAAAIAoAAAAA=</HashCode>
+      <FileName>CommandPoolWrapper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Foundation" Collapsed="true">
+    <Position X="13.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAJAAACAACAoAAAAEABAAAIAAEQAAAAAAAACA=</HashCode>
+      <FileName>Foundation.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Logger" Collapsed="true">
+    <Position X="15" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAQAAAAIAAAAAAIAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Logger.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LogicDeviceWrapper" Collapsed="true">
+    <Position X="11.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABBAATAEAGAAAEAAAEAAAAQAAAAAAIAQAAAEA=</HashCode>
+      <FileName>LogicDeviceWrapper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model" Collapsed="true">
+    <Position X="13.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EcAAAAACAAAAAqACIAAkAgAAAAAAAAAAAAgAEAAAAAA=</HashCode>
+      <FileName>Model.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PhysDeviceWrapper" Collapsed="true">
+    <Position X="15" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAgAACAAAAAQACACAAAAAAAAAAAAAAAgACAAAAAAAAA=</HashCode>
+      <FileName>PhysDeviceWrapper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PrimitiveVertex" Collapsed="true">
+    <Position X="3.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAIAAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>PrimitiveVertex.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SwapchinWrapper" Collapsed="true">
+    <Position X="11.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACRAAACAAACAAAAAAAQAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>SwapchinWrapper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PrimitiveIndexBuffer" Collapsed="true">
+    <Position X="7.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAIAAAAAAAAAAIAAAAAAAAA=</HashCode>
+      <FileName>PrimitiveIndexBuffer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IndexBufferWrapper" Collapsed="true">
+    <Position X="7.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAgAAAAAAAgAAAAAAAAAAAAAAAEAAAIAAAAIAQAA=</HashCode>
+      <FileName>IndexBufferWrapper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PrimitiveVertexBufferWrapper&lt;T&gt;" Collapsed="true">
+    <Position X="5.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAgACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PrimitiveVertexBufferWrapper.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="MatrixesBufer" Collapsed="true">
+    <Position X="15" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAEAAAgAAAAAAAAAAQAAAAAAAAAABAAIAAAA=</HashCode>
+      <FileName>Source.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="FamilyOfQueue" Collapsed="true">
+    <Position X="11.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAQAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>LogicDeviceWrapper.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="VertexBuffer" Collapsed="true">
+    <Position X="11.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAIAUAA=</HashCode>
+      <FileName>Model.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="IndexBuffer" Collapsed="true">
+    <Position X="13.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAIAQAI=</HashCode>
+      <FileName>Model.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

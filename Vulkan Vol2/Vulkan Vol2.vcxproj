@@ -152,13 +152,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractBasePipelineWrapper.cpp" />
+    <ClCompile Include="AbstractCamera.cpp" />
     <ClCompile Include="AbstractVertex.cpp" />
+    <ClCompile Include="ColorModel.cpp" />
+    <ClCompile Include="ColorPipelineWrapper.cpp" />
+    <ClCompile Include="ColorVertex.cpp" />
     <ClCompile Include="CommandPoolWrapper.cpp" />
     <ClCompile Include="Foundation.cpp" />
+    <ClCompile Include="AbstractIndexBufferWrapper.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LogicDeviceWrapper.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PhysDeviceWrapper.cpp" />
+    <ClCompile Include="PrimitiveCamera.cpp" />
+    <ClCompile Include="PrimitiveIndexBuffer.cpp" />
+    <ClCompile Include="PrimitiveIndexedModel.cpp" />
     <ClCompile Include="PrimitiveModel.cpp" />
     <ClCompile Include="PrimitivePipelineWrapper.cpp" />
     <ClCompile Include="PrimitiveVertex.cpp" />
@@ -166,13 +175,24 @@
     <ClCompile Include="SwapchinWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractBasePipelineWrapper.h" />
+    <ClInclude Include="AbstractCamera.h" />
+    <ClInclude Include="AbstractIndexedModel.hpp" />
+    <ClInclude Include="AbstractIndexBufferWrapper.h" />
     <ClInclude Include="AbstractModel.hpp" />
     <ClInclude Include="AbstractModelBase.hpp" />
     <ClInclude Include="AbstractPipelineWrapper.hpp" />
     <ClInclude Include="AbstractVertex.h" />
+    <ClInclude Include="ColorModel.h" />
+    <ClInclude Include="ColorPipelineWrapper.h" />
+    <ClInclude Include="ColorVertex.h" />
+    <ClInclude Include="PrimitiveBasePipelineWrapper.hpp" />
+    <ClInclude Include="PrimitiveCamera.h" />
+    <ClInclude Include="PrimitiveIndexBuffer.h" />
+    <ClInclude Include="PrimitiveIndexedModel.h" />
     <ClInclude Include="PrimitiveModel.h" />
     <ClInclude Include="PrimitivePipelineWrapper.h" />
-    <ClInclude Include="VertexBufferWrapper.hpp" />
+    <ClInclude Include="AbstractVertexBufferWrapper.hpp" />
     <ClInclude Include="CommandPoolWrapper.h" />
     <ClInclude Include="Foundation.h" />
     <ClInclude Include="Logger.h" />
@@ -180,9 +200,11 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="PhysDeviceWrapper.h" />
     <ClInclude Include="PrimitiveVertex.h" />
+    <ClInclude Include="PrimitiveVertexBufferWrapper.h" />
     <ClInclude Include="SwapchinWrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="Text.vert" />
     <None Include="Text.frag" />
   </ItemGroup>

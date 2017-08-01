@@ -1,26 +1,29 @@
 #pragma once
-#include "VertexBufferWrapper.hpp"
+#include "AbstractVertexBufferWrapper.hpp"
 #include "AbstractModelBase.hpp"
 
-template<class T, class Self>
+template<class T, class VertexBuffer>
 class AbstractModel : AbstractModelBase<T>
 {
+	static_assert(std::is_base_of<AbstractVertexBufferWrapper<T>, VertexBuffer>::value, "T does not extend OtherClass");
 protected:
-	VertexBufferWrapper<T> VertBuffer;
+	VertexBuffer VertBuffer;
 public:
-	AbstractModel(LogicDeviceWrapper Device);
+	//void Init() {};
+//	AbstractModel(LogicDeviceWrapper Device);
 	virtual ~AbstractModel();
+	AbstractModel(LogicDeviceWrapper Device, vector<T> vertexes);
 };
 
 
-template<class T, class Self>
-inline AbstractModel<T, Self>::AbstractModel(LogicDeviceWrapper Device) : AbstractModelBase<T>(), VertBuffer(Device)
+template<class T, class VertexBuffer>
+inline AbstractModel<T, VertexBuffer>::~AbstractModel()
 {
-	static_cast<Self*>(this)->Init();
-	VertBuffer.WriteVertexes();
 }
 
-template<class T, class Self>
-inline AbstractModel<T, Self>::~AbstractModel()
+template<class T, class VertexBuffer>
+inline AbstractModel<T, VertexBuffer>::AbstractModel(LogicDeviceWrapper Device, vector<T> vertexes) : AbstractModelBase<T>(), VertBuffer(Device, vertexes)
 {
+	//static_cast<Self*>(this)->Init();
+	VertBuffer.WriteVertexes();
 }

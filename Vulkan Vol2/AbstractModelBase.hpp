@@ -5,7 +5,7 @@ class AbstractModelBase
 {
 public:
 	AbstractModelBase();
-	virtual void Draw() = 0;
+	virtual void Draw(VkCommandBuffer CmdBuffer) = 0;
 	virtual ~AbstractModelBase();
 };
 
