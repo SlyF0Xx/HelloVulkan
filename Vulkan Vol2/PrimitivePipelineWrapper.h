@@ -1,9 +1,10 @@
 #pragma once
 #include "PrimitiveBasePipelineWrapper.hpp"
 #include "PrimitiveModel.h"
+#include "AbstractWorldModel.hpp"
 
 class PrimitivePipelineWrapper: 
-	public PrimitiveBasePipelineWrapper<PrimitiveVertex, 1>
+	public PrimitiveBasePipelineWrapper<PrimitiveVertex, AbstractWorldModel<PrimitiveVertex>>
 {
 private:
 	static vector<VkVertexInputBindingDescription> InitVertexInputDesc();
@@ -13,14 +14,14 @@ private:
 	static vector<VkDescriptorSet> InitDescriptors(LogicDeviceWrapper device);
 
 	//vector<VkDescriptorSetLayout> DescriptorSets;
-	
-	void UpdateMatrixDescriptor(VkBuffer MatrixBuffer);
 
 	static const VkFormat DepthFormat = VK_FORMAT_D32_SFLOAT_S8_UINT;
 	static const VkSampleCountFlagBits Sample = VK_SAMPLE_COUNT_1_BIT;
 public:
-	PrimitivePipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer MatrixBuffer);
+	PrimitivePipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer ViewProjMatrixBuffer);
 	~PrimitivePipelineWrapper();
 	void _Draw(VkCommandBuffer CmdBuffer, vector<VkImageView> ImageViews);
+	void UpdateViewPtojMatrixDescriptor(VkBuffer MatrixBuffer);
+	void UpdateWorldMatrixDescriptor(VkBuffer MatrixBuffer);
 };
 

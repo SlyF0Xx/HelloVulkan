@@ -9,7 +9,8 @@ vector<PrimitiveVertex> PrimitiveModel::Init()
 	};
 }
 
-PrimitiveModel::PrimitiveModel(LogicDeviceWrapper Device) : 
+PrimitiveModel::PrimitiveModel(LogicDeviceWrapper Device, glm::vec3 rotation) :
+	AbstractWorldModel<PrimitiveVertex>(Device, rotation),
 	AbstractModel<PrimitiveVertex, PrimitiveVertexBufferWrapper<PrimitiveVertex>>(Device, PrimitiveModel::Init())
 {
 }

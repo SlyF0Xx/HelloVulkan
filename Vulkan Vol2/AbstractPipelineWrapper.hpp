@@ -4,15 +4,15 @@
 using namespace std;
 
 //TODO параметризовать по Descriptor Set
-template<class T, int CountOfOutImages>
+template<class T, class Model, int CountOfOutImages>
 class AbstractPipelineWrapper:
-	AbstractBasePipelineWrapper
+	public AbstractBasePipelineWrapper
 {
 	static_assert(std::is_base_of<AbstractVertex, T >::value, "T does not extend OtherClass");
 protected:
 	VkPipeline Pipeline;
 public:
-	vector<AbstractModelBase<T>*> Models;
+	vector<Model*> Models;
 	vector<VkCommandBuffer> CmdBuffers;
 	AbstractPipelineWrapper();
 	void Draw(VkCommandBuffer CmdBuffer, array<VkImageView, CountOfOutImages> ImageViews);
@@ -20,24 +20,24 @@ public:
 	VkPipeline GetPipeline();
 };
 
-template<class T, int CountOfOutImages>
-inline AbstractPipelineWrapper<T, CountOfOutImages>::AbstractPipelineWrapper():AbstractBasePipelineWrapper()
+template<class T, class Model, int CountOfOutImages>
+inline AbstractPipelineWrapper<T, Model, CountOfOutImages>::AbstractPipelineWrapper():AbstractBasePipelineWrapper()
 {
 }
 
-template<class T, int CountOfOutImages>
-inline void AbstractPipelineWrapper<T, CountOfOutImages>::Draw(VkCommandBuffer CmdBuffer, array<VkImageView, CountOfOutImages> ImageViews)
+template<class T, class Model,  int CountOfOutImages>
+inline void AbstractPipelineWrapper<T, Model, CountOfOutImages>::Draw(VkCommandBuffer CmdBuffer, array<VkImageView, CountOfOutImages> ImageViews)
 {
 	_Draw(CmdBuffer, vector<VkImageView>(ImageViews.begin(), ImageViews.end()));
 }
 
-template<class T, int CountOfOutImages>
-inline AbstractPipelineWrapper<T, CountOfOutImages>::~AbstractPipelineWrapper()
+template<class T, class Model, int CountOfOutImages>
+inline AbstractPipelineWrapper<T, Model, CountOfOutImages>::~AbstractPipelineWrapper()
 {
 }
 
-template<class T, int CountOfOutImages>
-inline VkPipeline AbstractPipelineWrapper<T, CountOfOutImages>::GetPipeline()
+template<class T, class Model, int CountOfOutImages>
+inline VkPipeline AbstractPipelineWrapper<T, Model, CountOfOutImages>::GetPipeline()
 {
 	return Pipeline;
 }

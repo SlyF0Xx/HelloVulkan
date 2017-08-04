@@ -7,8 +7,8 @@
 //{
 //}
 
-PrimitiveIndexedModel::PrimitiveIndexedModel(LogicDeviceWrapper Device):
-	AbstractIndexedModel<PrimitiveVertex, PrimitiveVertexBufferWrapper<PrimitiveVertex>, PrimitiveIndexBuffer>(Device, PrimitiveIndexedModel::InitVertexes(), PrimitiveIndexedModel::InitIndexes())
+PrimitiveIndexedModel::PrimitiveIndexedModel(LogicDeviceWrapper Device, glm::vec3 rotation):
+	AbstractIndexedModel<PrimitiveVertex, PrimitiveVertexBufferWrapper<PrimitiveVertex>, PrimitiveIndexBuffer>(Device, PrimitiveIndexedModel::InitVertexes(), PrimitiveIndexedModel::InitIndexes(), rotation)
 {
 }
 

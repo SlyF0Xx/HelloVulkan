@@ -28,7 +28,7 @@ vector<VkAttachmentDescription> PrimitivePipelineWrapper::InitAttachments(VkSurf
 	Attachments[0].flags = 0;
 	Attachments[0].format = SurfaceFormat.format;
 	Attachments[0].samples = Sample;
-	Attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	Attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE; //Õ≈ «¿¡€“‹!
 	Attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	Attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	Attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -58,6 +58,13 @@ vector<VkDescriptorSetLayout> PrimitivePipelineWrapper::InitDescriptorSetsLayout
 	Bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
 	Bindings[0].pImmutableSamplers = NULL;
 
+	Bindings.push_back(VkDescriptorSetLayoutBinding());
+	Bindings[1].binding = 1;
+	Bindings[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER; //VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+	Bindings[1].descriptorCount = 1;
+	Bindings[1].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
+	Bindings[1].pImmutableSamplers = NULL;
+
 	VkDescriptorSetLayoutCreateInfo DescInfo{};
 	DescInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 	DescInfo.pNext = NULL;
@@ -82,6 +89,10 @@ vector<VkDescriptorSet> PrimitivePipelineWrapper::InitDescriptors(LogicDeviceWra
 	typeCounts[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;//VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
 	typeCounts[0].descriptorCount = 1;
 
+	typeCounts.push_back(VkDescriptorPoolSize());
+	typeCounts[1].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;//VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
+	typeCounts[1].descriptorCount = 1;
+
 	VkDescriptorPoolCreateInfo DescPoolInfo;
 	DescPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	DescPoolInfo.pNext = NULL;
@@ -104,7 +115,7 @@ vector<VkDescriptorSet> PrimitivePipelineWrapper::InitDescriptors(LogicDeviceWra
 	return Descriptor;
 }
 
-void PrimitivePipelineWrapper::UpdateMatrixDescriptor(VkBuffer MatrixBuffer)
+void PrimitivePipelineWrapper::UpdateViewPtojMatrixDescriptor(VkBuffer MatrixBuffer)
 {
 	VkDescriptorBufferInfo BufferDescriptor;
 	BufferDescriptor.buffer = MatrixBuffer;
@@ -126,11 +137,33 @@ void PrimitivePipelineWrapper::UpdateMatrixDescriptor(VkBuffer MatrixBuffer)
 	vkUpdateDescriptorSets(Device.GetLogicDevice(), 1, &WriteDescriptorSetInfo, 0, nullptr);
 }
 
-PrimitivePipelineWrapper::PrimitivePipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer MatrixBuffer):
-	PrimitiveBasePipelineWrapper<PrimitiveVertex, 1>("Text.vert.spv", "Text.frag.spv", InitVertexInputDesc(), InitVertexInputAttrDesc(), InitAttachments(SurfaceFormat),
+void PrimitivePipelineWrapper::UpdateWorldMatrixDescriptor(VkBuffer MatrixBuffer)
+{
+	VkDescriptorBufferInfo BufferDescriptor;
+	BufferDescriptor.buffer = MatrixBuffer;
+	BufferDescriptor.offset = 0;
+	BufferDescriptor.range = VK_WHOLE_SIZE;
+
+	VkWriteDescriptorSet WriteDescriptorSetInfo;
+	WriteDescriptorSetInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	WriteDescriptorSetInfo.pNext = NULL;
+	WriteDescriptorSetInfo.dstSet = Descriptors[0];
+	WriteDescriptorSetInfo.dstBinding = 1;
+	WriteDescriptorSetInfo.dstArrayElement = 0;
+	WriteDescriptorSetInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;//VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
+	WriteDescriptorSetInfo.descriptorCount = 1;
+	WriteDescriptorSetInfo.pBufferInfo = &BufferDescriptor;
+	WriteDescriptorSetInfo.pImageInfo = NULL;
+	WriteDescriptorSetInfo.pTexelBufferView = NULL;
+
+	vkUpdateDescriptorSets(Device.GetLogicDevice(), 1, &WriteDescriptorSetInfo, 0, nullptr);
+}
+
+PrimitivePipelineWrapper::PrimitivePipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer ViewProjMatrixBuffer):
+	PrimitiveBasePipelineWrapper<PrimitiveVertex, AbstractWorldModel<PrimitiveVertex>>("Prim.vert.spv", "Prim.frag.spv", InitVertexInputDesc(), InitVertexInputAttrDesc(), InitAttachments(SurfaceFormat),
 		logger, device, InitDescriptorSetsLayout(device), InitDescriptors(device))
 {
-	UpdateMatrixDescriptor(MatrixBuffer);
+	UpdateViewPtojMatrixDescriptor(ViewProjMatrixBuffer);
 }
 
 PrimitivePipelineWrapper::~PrimitivePipelineWrapper()
@@ -273,6 +306,7 @@ void PrimitivePipelineWrapper::_Draw(VkCommandBuffer CmdBuffer, vector<VkImageVi
 
 	for (auto j : Models)
 	{
+		UpdateWorldMatrixDescriptor(j->GetWorld().GetBuffer());
 		j->Draw(CmdBuffer);
 	}
 

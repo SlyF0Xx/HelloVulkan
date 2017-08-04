@@ -1,13 +1,15 @@
 #pragma once
+#include "AbstractWorldModel.hpp"
 #include "AbstractModel.hpp"
 #include "PrimitiveVertex.h"
 #include "PrimitiveVertexBufferWrapper.h"
 
 class PrimitiveModel :
+	public AbstractWorldModel<PrimitiveVertex>,
 	public AbstractModel<PrimitiveVertex, PrimitiveVertexBufferWrapper<PrimitiveVertex>>
 {
 public:
-	PrimitiveModel(LogicDeviceWrapper Device);
+	PrimitiveModel(LogicDeviceWrapper Device, glm::vec3 rotation);
 	void Draw(VkCommandBuffer CmdBuffer);
 	~PrimitiveModel();
 protected:

@@ -1,9 +1,10 @@
 #pragma once
 #include "PrimitiveBasePipelineWrapper.hpp"
+#include "AbstractWorldModel.hpp"
 #include "ColorVertex.h"
 
 class ColorPipelineWrapper :
-	public PrimitiveBasePipelineWrapper<ColorVertex, 1>
+	public PrimitiveBasePipelineWrapper<ColorVertex, AbstractWorldModel<ColorVertex>>
 {
 private:
 	static vector<VkVertexInputBindingDescription> InitVertexInputDesc();
@@ -14,13 +15,14 @@ private:
 
 	//vector<VkDescriptorSetLayout> DescriptorSets;
 
-	void UpdateMatrixDescriptor(VkBuffer MatrixBuffer);
 
 	static const VkFormat DepthFormat = VK_FORMAT_D32_SFLOAT_S8_UINT;
 	static const VkSampleCountFlagBits Sample = VK_SAMPLE_COUNT_1_BIT;
 public:
-	ColorPipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer MatrixBuffer);
+	ColorPipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer ViewProjMatrixBuffer);
 	~ColorPipelineWrapper();
 	void _Draw(VkCommandBuffer CmdBuffer, vector<VkImageView> ImageViews);
+	void UpdateViewPtojMatrixDescriptor(VkBuffer MatrixBuffer);
+	void UpdateWorldMatrixDescriptor(VkBuffer MatrixBuffer);
 };
 

@@ -8,7 +8,7 @@ class PrimitiveIndexedModel :
 	public AbstractIndexedModel<PrimitiveVertex, PrimitiveVertexBufferWrapper<PrimitiveVertex>, PrimitiveIndexBuffer>
 {
 public:
-	PrimitiveIndexedModel(LogicDeviceWrapper Device);
+	PrimitiveIndexedModel(LogicDeviceWrapper Device, glm::vec3 rotation);
 	~PrimitiveIndexedModel();
 	void Draw(VkCommandBuffer CmdBuffer);
 protected:

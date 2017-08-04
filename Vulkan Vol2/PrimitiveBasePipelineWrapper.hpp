@@ -1,9 +1,9 @@
 #pragma once
 #include "AbstractPipelineWrapper.hpp"
 
-template<class Vertex, int CountOfOutImages>
+template<class Vertex, class Model>
 class PrimitiveBasePipelineWrapper :
-	public AbstractPipelineWrapper<Vertex, 1>
+	public AbstractPipelineWrapper<Vertex, Model, 1>
 {
 private:
 	VkShaderModule loadSPIRVShader(std::string filename);
@@ -24,8 +24,8 @@ public:
 };
 
 
-template<class Vertex, int CountOfOutImages>
-inline VkShaderModule PrimitiveBasePipelineWrapper<Vertex, CountOfOutImages>::loadSPIRVShader(std::string filename)
+template<class Vertex, class Model>
+inline VkShaderModule PrimitiveBasePipelineWrapper<Vertex, Model>::loadSPIRVShader(std::string filename)
 {
 	size_t shaderSize;
 	char* shaderCode;
@@ -76,14 +76,14 @@ inline VkShaderModule PrimitiveBasePipelineWrapper<Vertex, CountOfOutImages>::lo
 	}
 }
 
-template<class Vertex, int CountOfOutImages>
-inline VkRenderPass PrimitiveBasePipelineWrapper<Vertex, CountOfOutImages>::GetRenderPass()
+template<class Vertex, class Model>
+inline VkRenderPass PrimitiveBasePipelineWrapper<Vertex, Model>::GetRenderPass()
 {
 	return RenderPass;
 }
 
-template<class Vertex, int CountOfOutImages>
-PrimitiveBasePipelineWrapper<Vertex, CountOfOutImages>::PrimitiveBasePipelineWrapper(string vertShader, string fragShader,
+template<class Vertex, class Model>
+PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string vertShader, string fragShader,
 	vector<VkVertexInputBindingDescription> VertexInputDesc, vector<VkVertexInputAttributeDescription> VertexInputAttrDesc, vector<VkAttachmentDescription> Attachments,
 	Logger *logger, LogicDeviceWrapper device, vector<VkDescriptorSetLayout> DescriptorSets, vector<VkDescriptorSet> descriptors) :Device(device), Descriptors(descriptors)
 {
@@ -345,7 +345,7 @@ PrimitiveBasePipelineWrapper<Vertex, CountOfOutImages>::PrimitiveBasePipelineWra
 	logger->checkResults(vkCreateGraphicsPipelines(Device.GetLogicDevice(), Cache, 1, &PipelineInfo, nullptr, &Pipeline));
 }
 
-template<class Vertex, int CountOfOutImages>
-inline PrimitiveBasePipelineWrapper<Vertex, CountOfOutImages>::~PrimitiveBasePipelineWrapper()
+template<class Vertex, class Model>
+inline PrimitiveBasePipelineWrapper<Vertex, Model>::~PrimitiveBasePipelineWrapper()
 {
 }

@@ -21,6 +21,8 @@
 #include "PrimitiveIndexedModel.h"
 #include "ColorModel.h"
 #include "ColorPipelineWrapper.h"
+#include "PrimitiveCamera.h"
+#include "AbstractWorldModel.hpp"
 
 #pragma comment (lib, "vulkan-1.lib")
 
@@ -39,6 +41,9 @@ HWND hwnd;
 HINSTANCE HInstance;
 #endif
 
+
+Logger logger;
+AbstractCamera* ControlCamera;
 LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	switch (msg)
@@ -48,13 +53,17 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		PostQuitMessage(0);
 		return 0;
 	}
+	case WM_KEYDOWN:
+	{
+		ControlCamera->keyPressed(wparam);
+		break;
+	}
 	}
 
 
 	return (DefWindowProc(hwnd, msg, wparam, lparam));
 }
 
-Logger logger;
 
 VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(
 	VkDebugReportFlagsEXT flags,
@@ -69,129 +78,6 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(
 	logger.LogMessage(pMessage);
 	return VK_FALSE;
 }
-
-
-struct MatrixesBufer
-{
-	struct Matrixes
-	{
-		glm::mat4 WorldMatrix;
-		glm::mat4 ViewMatrix;
-		glm::mat4 ProjectionMatrix;
-	}Matrixs;
-	VkBuffer MatrixBuffer;
-	VkDeviceMemory memory;
-	vector<VkDescriptorSetLayout> Descriptors;
-	VkDescriptorSet Descriptor;
-
-	MatrixesBufer(LogicDeviceWrapper LogicDevaice)
-	{
-		VkBufferCreateInfo BufferCreateInfo;
-		BufferCreateInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		BufferCreateInfo.pNext = NULL;
-		BufferCreateInfo.flags = 0; //Есть варианты
-		BufferCreateInfo.size = sizeof(Matrixes);
-		BufferCreateInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-		vector<uint32_t> indexes;
-		if (LogicDevaice.GetQueuesFamilies().size() == 1)
-		{
-			BufferCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-			BufferCreateInfo.queueFamilyIndexCount = 1;
-			uint32_t index = LogicDevaice.GetQueuesFamilies()[0].Index;
-			BufferCreateInfo.pQueueFamilyIndices = &index;
-		}
-		else
-		{
-			BufferCreateInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
-			BufferCreateInfo.queueFamilyIndexCount = LogicDevaice.GetQueuesFamilies().size();
-			
-			for (int i(0); i < LogicDevaice.GetQueuesFamilies().size(); i++)
-			{
-				indexes.push_back(LogicDevaice.GetQueuesFamilies()[i].Index);
-			}
-			BufferCreateInfo.pQueueFamilyIndices = indexes.data();
-		}
-
-		vkCreateBuffer(LogicDevaice.GetLogicDevice(), &BufferCreateInfo, nullptr, &MatrixBuffer);
-
-		VkMemoryRequirements memReqs;
-		vkGetBufferMemoryRequirements(LogicDevaice.GetLogicDevice(), MatrixBuffer, &memReqs);
-
-		VkMemoryAllocateInfo MemoryAllocInfo;
-		MemoryAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		MemoryAllocInfo.pNext = NULL;
-		MemoryAllocInfo.allocationSize = memReqs.size;
-		MemoryAllocInfo.memoryTypeIndex = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT; //memReqs.memoryTypeBits; //VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT; //
-
-		vkAllocateMemory(LogicDevaice.GetLogicDevice(), &MemoryAllocInfo, nullptr, &memory);
-		vkBindBufferMemory(LogicDevaice.GetLogicDevice(), MatrixBuffer, memory, 0);
-		/*
-		vector<VkDescriptorSetLayoutBinding> Bindings;
-		Bindings.push_back(VkDescriptorSetLayoutBinding());
-		Bindings[0].binding = 0;
-		Bindings[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER; //VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-		Bindings[0].descriptorCount = 1;
-		Bindings[0].stageFlags = VK_SHADER_STAGE_VERTEX_BIT;
-		Bindings[0].pImmutableSamplers = NULL;
-
-		VkDescriptorSetLayoutCreateInfo DescInfo{};
-		DescInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-		DescInfo.pNext = NULL;
-		DescInfo.flags = 0; //Возможен флаг
-		DescInfo.bindingCount = Bindings.size();
-		DescInfo.pBindings = Bindings.data();
-
-		Descriptors.push_back(VkDescriptorSetLayout());
-		vkCreateDescriptorSetLayout(LogicDevaice.GetLogicDevice(), &DescInfo, nullptr, &Descriptors.back());
-
-		VkDescriptorBufferInfo BufferDescriptor;
-		BufferDescriptor.buffer = MatrixBuffer;
-		BufferDescriptor.offset = 0;
-		BufferDescriptor.range = VK_WHOLE_SIZE;
-
-		vector<VkDescriptorPoolSize> typeCounts;
-		// This example only uses one descriptor type (uniform buffer) and only requests one descriptor of this type
-		typeCounts.push_back(VkDescriptorPoolSize());
-		typeCounts[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;//VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
-		typeCounts[0].descriptorCount = 1;
-
-		VkDescriptorPoolCreateInfo DescPoolInfo;
-		DescPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-		DescPoolInfo.pNext = NULL;
-		DescPoolInfo.flags = 0; //Есть варианты
-		DescPoolInfo.maxSets = 1;
-		DescPoolInfo.poolSizeCount = typeCounts.size();
-		DescPoolInfo.pPoolSizes = typeCounts.data();
-
-		VkDescriptorPool DescPool;
-		vkCreateDescriptorPool(LogicDevaice.GetLogicDevice(), &DescPoolInfo, nullptr, &DescPool);
-
-		VkDescriptorSetAllocateInfo DescriptorInfo;
-		DescriptorInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-		DescriptorInfo.pNext = NULL;
-		DescriptorInfo.descriptorPool = DescPool;
-		DescriptorInfo.descriptorSetCount = Descriptors.size();
-		DescriptorInfo.pSetLayouts = Descriptors.data();
-
-		vkAllocateDescriptorSets(LogicDevaice.GetLogicDevice(), &DescriptorInfo, &Descriptor);
-
-		VkWriteDescriptorSet WriteDescriptorSetInfo;
-		WriteDescriptorSetInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		WriteDescriptorSetInfo.pNext = NULL;
-		WriteDescriptorSetInfo.dstSet = Descriptor;
-		WriteDescriptorSetInfo.dstBinding = 0;
-		WriteDescriptorSetInfo.dstArrayElement = 0;
-		WriteDescriptorSetInfo.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;//VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
-		WriteDescriptorSetInfo.descriptorCount = 1;
-		WriteDescriptorSetInfo.pBufferInfo = &BufferDescriptor;
-		WriteDescriptorSetInfo.pImageInfo = NULL;
-		WriteDescriptorSetInfo.pTexelBufferView = NULL;
-
-		vkUpdateDescriptorSets(LogicDevaice.GetLogicDevice(), 1, &WriteDescriptorSetInfo, 0, nullptr);
-		*/
-	}
-
-};
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -288,26 +174,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		logger.LogMessage("Generate");
 
-		//PrimitiveModel* mode = new PrimitiveModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
+		PrimitiveModel* mode = new PrimitiveModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0], glm::vec3());
 		//PrimitiveIndexedModel* Imode = new PrimitiveIndexedModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
 		//PrimitiveModel* mode = PrimitiveModel::create(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
 		//PrimitiveIndexedModel* Imode = PrimitiveIndexedModel::create(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
-		ColorModel * model = new ColorModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
+		ColorModel * model = new ColorModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0], glm::vec3());
 
 
-		MatrixesBufer MatrixesMainBufer = MatrixesBufer(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
-		
-		vector<VkDescriptorSet> desc;
-		desc.push_back(MatrixesMainBufer.Descriptor);
-		//PrimitivePipelineWrapper Pipe(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], foundation.GetSurfaceFormat(), MatrixesMainBufer.MatrixBuffer);
-		ColorPipelineWrapper Pipe(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], foundation.GetSurfaceFormat(), MatrixesMainBufer.MatrixBuffer);
+		//MatrixesBufer MatrixesMainBufer = MatrixesBufer(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
 
+		PrimitiveCamera camera = PrimitiveCamera(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], foundation.GetSurfaceFormat(), ScreenX, ScreenY, zoom);
+		ControlCamera = &camera;
+		static_cast<PrimitivePipelineWrapper*>(camera.Pipelines[0])->Models.push_back((AbstractWorldModel<PrimitiveVertex>*)mode);
+		static_cast<ColorPipelineWrapper*>(camera.Pipelines[1])->Models.push_back((AbstractWorldModel<ColorVertex>*)model);
 
-		//Pipe.Models.push_back((AbstractModelBase<PrimitiveVertex>*)mode);
-		//Pipe.Models.push_back((AbstractModelBase<PrimitiveVertex>*)Imode);
-		Pipe.Models.push_back((AbstractModelBase<ColorVertex>*)model);
-
-		//Model model(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], foundation.GetSurfaceFormat(), DepthFormat, MatrixesMainBufer.Descriptors);
 
 		logger.LogMessage("Done");
 
@@ -322,301 +202,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		logger.checkResults(vkCreateSemaphore(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &SemaphoreInfo, nullptr, &ImageReady));
 		logger.checkResults(vkCreateSemaphore(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &SemaphoreInfo, nullptr, &CalculationReady));
 
-		VkImageSubresourceRange SubRange;
-		SubRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-		SubRange.baseMipLevel = 0;
-		SubRange.levelCount = 1;
-		SubRange.baseArrayLayer = 0;
-		SubRange.layerCount = 1;
-
-		/*
-		VkImageSubresourceRange DepthSubRange;
-		DepthSubRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-		DepthSubRange.baseMipLevel = 0;
-		DepthSubRange.levelCount = 1;
-		DepthSubRange.baseArrayLayer = 0;
-		DepthSubRange.layerCount = 1;
-
-		vector<VkClearValue> clearValues;
-		clearValues.push_back(VkClearValue());
-		clearValues[0].color = { { 0.1f, 0.0f, 0.2f, 0.1f } };
-		clearValues.push_back(VkClearValue());
-		clearValues[1].depthStencil = { 1.0f, 0 };
-		*/
-
-		VkCommandBufferBeginInfo BeginInfo;
-		BeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-		BeginInfo.pNext = NULL;
-		BeginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-		BeginInfo.pInheritanceInfo = NULL;
-		//VkClearColorValue color = { 1.0f, 0.5f, 0.0f};
-
 		logger.LogMessage("Prepare");
-		//ofstream fout("test.txt");
-
-
-		//vector<VkFramebuffer> Framebeffers;
 		for (int i(0); i < foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetImages().size(); i++)
 		{
-
-
-
-
-			/*
-			vkBeginCommandBuffer(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], &BeginInfo);
-			vkCmdBindPipeline(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], VK_PIPELINE_BIND_POINT_GRAPHICS, Pipe.GetPipeline());
-			vkEndCommandBuffer(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i]);
-
-			VkPipelineStageFlags stag = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-
-			VkSubmitInfo SubmitInfo;
-			SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-			SubmitInfo.pNext = NULL;
-			SubmitInfo.waitSemaphoreCount = 0;
-			SubmitInfo.pWaitSemaphores = NULL;
-			SubmitInfo.pWaitDstStageMask = &stag;
-			SubmitInfo.commandBufferCount = 1;
-			SubmitInfo.pCommandBuffers = &foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i];
-			SubmitInfo.signalSemaphoreCount = 0;
-			SubmitInfo.pSignalSemaphores = NULL;
-
-
-			VkFenceCreateInfo createInfo;
-			createInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-			createInfo.pNext = NULL;
-			createInfo.flags = NULL;
-
-			VkFence fence;
-			vkCreateFence(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &createInfo, NULL, &fence);
-
-			logger.checkResults(vkQueueSubmit(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Queues[0], 1, &SubmitInfo, fence));
-
-			logger.checkResults(vkWaitForFences(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), 1, &fence, VK_TRUE, VK_WHOLE_SIZE));
-			*/
-
-
-			//vector<VkImageView> ImageViews;
-			
-			VkImageViewCreateInfo ColorImageViewInfo{};
-			ColorImageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			ColorImageViewInfo.pNext = NULL;
-			ColorImageViewInfo.flags = 0;
-			ColorImageViewInfo.image = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetImages()[i];
-			ColorImageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-			ColorImageViewInfo.format = foundation.GetSurfaceFormat().format;
-			ColorImageViewInfo.subresourceRange = SubRange;
-
-			VkImageView ColorView;
-			vkCreateImageView(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &ColorImageViewInfo, nullptr, &ColorView);
-			//ImageViews.push_back(ColorView);
-
-
-			/*
-			VkImageCreateInfo DepthImageInfo;
-			DepthImageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-			DepthImageInfo.pNext = NULL;
-			DepthImageInfo.flags = 0;
-			DepthImageInfo.imageType = VK_IMAGE_TYPE_2D;
-			DepthImageInfo.format = DepthFormat;
-			DepthImageInfo.extent.height = 561;
-			DepthImageInfo.extent.width = 884;
-			DepthImageInfo.extent.depth = 1;
-			DepthImageInfo.mipLevels = 1;
-			DepthImageInfo.arrayLayers = 1;
-			DepthImageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-			DepthImageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-			DepthImageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-
-			vector<uint32_t> indexes;
-			if (foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies().size() == 1)
-			{
-				DepthImageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-				DepthImageInfo.queueFamilyIndexCount = 1;
-				uint32_t index = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Index;
-				DepthImageInfo.pQueueFamilyIndices = &index;
-			}
-			else
-			{
-				DepthImageInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
-				DepthImageInfo.queueFamilyIndexCount = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies().size();
-				
-				for (int i(0); i < foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies().size(); i++)
-				{
-					indexes.push_back(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[i].Index);
-				}
-				DepthImageInfo.pQueueFamilyIndices = indexes.data();
-			}
-			DepthImageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;// VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-			VkImage DepthImage;
-			logger.checkResults(vkCreateImage(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &DepthImageInfo, nullptr, &DepthImage));
-
-			VkMemoryRequirements memReqs;
-			vkGetImageMemoryRequirements(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), DepthImage, &memReqs);
-			
-			VkMemoryAllocateInfo MemoryAllocInfo;
-			MemoryAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-			MemoryAllocInfo.pNext = NULL;
-			MemoryAllocInfo.allocationSize = memReqs.size;
-			MemoryAllocInfo.memoryTypeIndex = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;// | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT; //VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-
-			VkDeviceMemory memory;
-			vkAllocateMemory(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &MemoryAllocInfo, nullptr, &memory);
-
-			vkBindImageMemory(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), DepthImage, memory, 0);
-			
-			VkImageViewCreateInfo DepthImageViewInfo{};
-			DepthImageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			DepthImageViewInfo.pNext = NULL;
-			DepthImageViewInfo.flags = 0;
-			DepthImageViewInfo.image = DepthImage;
-			DepthImageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-			DepthImageViewInfo.format = DepthFormat;
-			DepthImageViewInfo.subresourceRange = DepthSubRange;
-
-			VkImageView DepthView;
-			vkCreateImageView(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &DepthImageViewInfo, nullptr, &DepthView);
-			ImageViews.push_back(DepthView);
-			*/
-			/*
-			VkFramebufferCreateInfo FramebufferCreateInfo;
-			FramebufferCreateInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-			FramebufferCreateInfo.pNext = NULL;
-			FramebufferCreateInfo.flags = 0;
-			FramebufferCreateInfo.renderPass = Pipe.GetRenderPass();
-			FramebufferCreateInfo.attachmentCount = ImageViews.size();
-			FramebufferCreateInfo.pAttachments = ImageViews.data();
-			FramebufferCreateInfo.height = 561;
-			FramebufferCreateInfo.width = 884;
-			FramebufferCreateInfo.layers = 1;
-
-			VkFramebuffer FrameBuffer;
-			vkCreateFramebuffer(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &FramebufferCreateInfo, nullptr, &FrameBuffer);
-			*/
-
-			/*VkRenderPassBeginInfo RenderBeginInfo;
-			RenderBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-			RenderBeginInfo.pNext = NULL;
-			RenderBeginInfo.renderPass = model.GetRenderPass();
-			RenderBeginInfo.renderArea.offset.x = 0;
-			RenderBeginInfo.renderArea.offset.y = 0;
-			RenderBeginInfo.renderArea.extent.height = 561;
-			RenderBeginInfo.renderArea.extent.width = 884;
-			RenderBeginInfo.clearValueCount = clearValues.size();
-			RenderBeginInfo.pClearValues = clearValues.data();
-			RenderBeginInfo.framebuffer = FrameBuffer;
-
-
-			/*
-			VkImageMemoryBarrier BeforeBarier;
-			BeforeBarier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-			BeforeBarier.pNext = NULL;
-			BeforeBarier.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-			BeforeBarier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			BeforeBarier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-			BeforeBarier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-			BeforeBarier.srcQueueFamilyIndex = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Index;
-			BeforeBarier.dstQueueFamilyIndex = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Index; //Надо бы поиграть
-			BeforeBarier.image = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetImages()[i];
-			BeforeBarier.subresourceRange = SubRange;
-
-			VkImageMemoryBarrier AfterBarier;
-			AfterBarier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-			AfterBarier.pNext = NULL;
-			AfterBarier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-			AfterBarier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
-			AfterBarier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-			AfterBarier.newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-			AfterBarier.srcQueueFamilyIndex = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Index;
-			AfterBarier.dstQueueFamilyIndex = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Index;
-			AfterBarier.image = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetImages()[i];
-			AfterBarier.subresourceRange = SubRange;
-			
-
-			logger.LogMessage("Prepare for Begin");
-			*/
-			
-			logger.checkResults(vkBeginCommandBuffer(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], &BeginInfo));
-				vkCmdBindPipeline(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], VK_PIPELINE_BIND_POINT_GRAPHICS, Pipe.GetPipeline());
-
-				Pipe.Draw(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], { ColorView });
-			
-			/*
-
-				
-				vkCmdBeginRenderPass(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], &RenderBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
-				
-					// Update dynamic viewport state
-					VkViewport viewport = {};
-					viewport.height = (float)561;
-					viewport.width = (float)884;
-					viewport.minDepth = (float) 0.0f;
-					viewport.maxDepth = (float) 1.0f;
-					vkCmdSetViewport(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], 0, 1, &viewport);
-
-					// Update dynamic scissor state
-					VkRect2D scissor = {};
-					scissor.extent.width = 884;
-					scissor.extent.height = 561;
-					scissor.offset.x = 0; 
-					scissor.offset.y = 0;
-					vkCmdSetScissor(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], 0, 1, &scissor);
-
-					vkCmdBindDescriptorSets(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
-						model.GetPipelineLayout(), 0, 1, &MatrixesMainBufer.Descriptor, 0, nullptr);
-
-					//ВЫНЕСТИ ОТДЕЛЬНО!!
-					vkCmdBindPipeline(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], VK_PIPELINE_BIND_POINT_GRAPHICS, model.GetPipeline());
-
-					VkBuffer temp = model.GetVertBuf().Buffer;
-					VkDeviceSize offsets[1] = { 0 };
-					vkCmdBindVertexBuffers(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], 0, 1, &temp, offsets);
-					vkCmdBindIndexBuffer(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], model.GetIndexBuf().Buffer,0, VK_INDEX_TYPE_UINT32);
-
-					//vkCmdPipelineBarrier(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-					//	VK_PIPELINE_STAGE_TRANSFER_BIT, 0 , 0, nullptr, 0, nullptr, 1, &BeforeBarier);
-					//								//VK_DEPENDENCY_VIEW_LOCAL_BIT_KHX
-			
-					//vkCmdClearColorImage(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i],
-					//	foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetImages()[i], VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, &color, 1, &SubRange);
-
-					vkCmdDrawIndexed(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], 3, 1, 0, 0, 1);
-
-					//vkCmdPipelineBarrier(
-					//	foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], VK_PIPELINE_STAGE_TRANSFER_BIT,
-					//	VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, 0, 0, nullptr, 0, nullptr, 1, &AfterBarier);
-					//						//VK_DEPENDENCY_VIEW_LOCAL_BIT_KHX
-
-				vkCmdEndRenderPass(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i]);
-				*/
-			logger.checkResults(vkEndCommandBuffer(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i]));
+			camera.Draw(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetImages()[i]);
 		}
 
 		VkPipelineStageFlags stage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
 
 		unsigned int ImageIndex;
-
-		// Update matrices
-		MatrixesMainBufer.Matrixs.ProjectionMatrix = glm::perspective(glm::radians(60.0f), (float)ScreenX / (float)ScreenY, 0.1f, 256.0f);
-
-		MatrixesMainBufer.Matrixs.ViewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, zoom));
-
-		MatrixesMainBufer.Matrixs.WorldMatrix = glm::mat4();
-		MatrixesMainBufer.Matrixs.WorldMatrix = glm::rotate(MatrixesMainBufer.Matrixs.WorldMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-		MatrixesMainBufer.Matrixs.WorldMatrix = glm::rotate(MatrixesMainBufer.Matrixs.WorldMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-		MatrixesMainBufer.Matrixs.WorldMatrix = glm::rotate(MatrixesMainBufer.Matrixs.WorldMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
-		// Map uniform buffer and update it
-		uint8_t *pData;
-		vkMapMemory(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), MatrixesMainBufer.memory, 0, sizeof(MatrixesMainBufer.Matrixs), 0, (void **)&pData);
-		memcpy(pData, &MatrixesMainBufer.Matrixs, sizeof(MatrixesMainBufer.Matrixs));
-		// Unmap after data has been copied
-		// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-		vkUnmapMemory(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), MatrixesMainBufer.memory);
-
-		//glm::mat4 Other = MatrixesMainBufer.Matrixs.ProjectionMatrix * MatrixesMainBufer.Matrixs.ViewMatrix * MatrixesMainBufer.Matrixs.WorldMatrix;
-		//glm::vec4 vector = MatrixesMainBufer.Matrixs.ProjectionMatrix  * glm::vec4(model.GetVertBuf().vertexes[0].position[0], model.GetVertBuf().vertexes[0].position[1], model.GetVertBuf().vertexes[0].position[2], 1.0f);
-
 
 		logger.LogMessage("All prepare for draw");
 
@@ -634,28 +228,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				logger.checkResults(vkAcquireNextImageKHR(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(),
 					foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetSwapchain(), UINT64_MAX, ImageReady, NULL, &ImageIndex));
 				
-				// Update matrices
-				MatrixesMainBufer.Matrixs.ProjectionMatrix = glm::perspective(glm::radians(60.0f), (float)ScreenX / (float)ScreenY, 0.1f, 256.0f);
-
-				MatrixesMainBufer.Matrixs.ViewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, zoom));
-
-				MatrixesMainBufer.Matrixs.WorldMatrix = glm::mat4();
-				MatrixesMainBufer.Matrixs.WorldMatrix = glm::rotate(MatrixesMainBufer.Matrixs.WorldMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-				MatrixesMainBufer.Matrixs.WorldMatrix = glm::rotate(MatrixesMainBufer.Matrixs.WorldMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-				MatrixesMainBufer.Matrixs.WorldMatrix = glm::rotate(MatrixesMainBufer.Matrixs.WorldMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-
-				// Map uniform buffer and update it
-				uint8_t *pData;
-				vkMapMemory(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), MatrixesMainBufer.memory, 0, sizeof(MatrixesMainBufer.Matrixs), 0, (void **)&pData);
-				memcpy(pData, &MatrixesMainBufer.Matrixs, sizeof(MatrixesMainBufer.Matrixs));
-				// Unmap after data has been copied
-				// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-				vkUnmapMemory(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), MatrixesMainBufer.memory);
-
-				//glm::mat4 Other = MatrixesMainBufer.Matrixs.ProjectionMatrix * MatrixesMainBufer.Matrixs.ViewMatrix * MatrixesMainBufer.Matrixs.WorldMatrix;
-				//glm::vec4 vector = MatrixesMainBufer.Matrixs.ProjectionMatrix  * glm::vec4(model.GetVertBuf().vertexes[0].position[0], model.GetVertBuf().vertexes[0].position[1], model.GetVertBuf().vertexes[0].position[2], 1.0f);
-
-
 				VkSubmitInfo SubmitInfo;
 				SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 				SubmitInfo.pNext = NULL;

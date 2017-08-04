@@ -7,11 +7,14 @@ layout (location = 0) in vec3 position;
 layout (location = 1) in vec4 in_color;
 
 
-layout (binding = 0) uniform Matrixes{
-	mat4 World;
+layout (binding = 0) uniform CamMatrixes{
 	mat4 View;
 	mat4 Projection;
-}matrixes;
+}ViewProjMat;
+
+layout (binding = 1) uniform ModelMatrixes{
+	mat4 World;
+}WorldMat;
 
 out gl_PerVertex 
 {
@@ -22,7 +25,7 @@ layout(location = 0) out vec4 color;
 
 void main()
 {
-	mat4 Matrix = matrixes.Projection  * matrixes.View * matrixes.World ;
+	mat4 Matrix = ViewProjMat.Projection  * ViewProjMat.View * WorldMat.World ;
 	gl_Position = Matrix * vec4(position, 1.0f);
 	color = in_color;
 }

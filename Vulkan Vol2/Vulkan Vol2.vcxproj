@@ -163,6 +163,7 @@
     <ClCompile Include="AbstractIndexBufferWrapper.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LogicDeviceWrapper.cpp" />
+    <ClCompile Include="MatrixBuffer.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PhysDeviceWrapper.cpp" />
     <ClCompile Include="PrimitiveCamera.cpp" />
@@ -173,6 +174,7 @@
     <ClCompile Include="PrimitiveVertex.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="SwapchinWrapper.cpp" />
+    <ClCompile Include="WorldBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractBasePipelineWrapper.h" />
@@ -183,9 +185,11 @@
     <ClInclude Include="AbstractModelBase.hpp" />
     <ClInclude Include="AbstractPipelineWrapper.hpp" />
     <ClInclude Include="AbstractVertex.h" />
+    <ClInclude Include="AbstractWorldModel.hpp" />
     <ClInclude Include="ColorModel.h" />
     <ClInclude Include="ColorPipelineWrapper.h" />
     <ClInclude Include="ColorVertex.h" />
+    <ClInclude Include="MatrixBuffer.h" />
     <ClInclude Include="PrimitiveBasePipelineWrapper.hpp" />
     <ClInclude Include="PrimitiveCamera.h" />
     <ClInclude Include="PrimitiveIndexBuffer.h" />
@@ -202,9 +206,12 @@
     <ClInclude Include="PrimitiveVertex.h" />
     <ClInclude Include="PrimitiveVertexBufferWrapper.h" />
     <ClInclude Include="SwapchinWrapper.h" />
+    <ClInclude Include="WorldBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="Prim.frag" />
+    <None Include="Prim.vert" />
     <None Include="Text.vert" />
     <None Include="Text.frag" />
   </ItemGroup>

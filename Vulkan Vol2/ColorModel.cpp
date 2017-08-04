@@ -1,8 +1,9 @@
 #include "ColorModel.h"
 
 
-ColorModel::ColorModel(LogicDeviceWrapper Device)
-	:AbstractModel<ColorVertex, PrimitiveVertexBufferWrapper<ColorVertex>>(Device, ColorModel::Init())
+ColorModel::ColorModel(LogicDeviceWrapper Device, glm::vec3 rotation)
+	:AbstractModel<ColorVertex, PrimitiveVertexBufferWrapper<ColorVertex>>(Device, ColorModel::Init()),
+	AbstractWorldModel<ColorVertex>(Device, rotation)
 {
 }
 
