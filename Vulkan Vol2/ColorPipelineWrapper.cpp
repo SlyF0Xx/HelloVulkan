@@ -122,10 +122,10 @@ vector<VkDescriptorSet> ColorPipelineWrapper::InitDescriptors(LogicDeviceWrapper
 	return Descriptor;
 }
 
-void ColorPipelineWrapper::UpdateViewPtojMatrixDescriptor(VkBuffer MatrixBuffer)
+void ColorPipelineWrapper::UpdateViewPtojMatrixDescriptor()
 {
 	VkDescriptorBufferInfo BufferDescriptor;
-	BufferDescriptor.buffer = MatrixBuffer;
+	BufferDescriptor.buffer = ViewPtojMatrixBuffer;
 	BufferDescriptor.offset = 0;
 	BufferDescriptor.range = VK_WHOLE_SIZE;
 
@@ -144,10 +144,10 @@ void ColorPipelineWrapper::UpdateViewPtojMatrixDescriptor(VkBuffer MatrixBuffer)
 	vkUpdateDescriptorSets(Device.GetLogicDevice(), 1, &WriteDescriptorSetInfo, 0, nullptr);
 }
 
-void ColorPipelineWrapper::UpdateWorldMatrixDescriptor(VkBuffer MatrixBuffer)
+void ColorPipelineWrapper::UpdateWorldMatrixDescriptor()
 {
 	VkDescriptorBufferInfo BufferDescriptor;
-	BufferDescriptor.buffer = MatrixBuffer;
+	BufferDescriptor.buffer = WorldMatrixBuffer.GetBuffer();
 	BufferDescriptor.offset = 0;
 	BufferDescriptor.range = VK_WHOLE_SIZE;
 
@@ -168,9 +168,12 @@ void ColorPipelineWrapper::UpdateWorldMatrixDescriptor(VkBuffer MatrixBuffer)
 
 ColorPipelineWrapper::ColorPipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer ViewProjMatrixBuffer) :
 	PrimitiveBasePipelineWrapper<ColorVertex, AbstractWorldModel<ColorVertex>>("Text.vert.spv", "Text.frag.spv", InitVertexInputDesc(), InitVertexInputAttrDesc(), InitAttachments(SurfaceFormat),
-		logger, device, InitDescriptorSetsLayout(device), InitDescriptors(device))
+		logger, device, InitDescriptorSetsLayout(device)),
+	ViewPtojMatrixBuffer(ViewProjMatrixBuffer), WorldMatrixBuffer(device, glm::vec3())
 {
-	UpdateViewPtojMatrixDescriptor(ViewProjMatrixBuffer);
+	InitDescriptors(device);
+	UpdateViewPtojMatrixDescriptor();
+	UpdateWorldMatrixDescriptor();
 }
 
 ColorPipelineWrapper::~ColorPipelineWrapper()
@@ -313,7 +316,7 @@ void ColorPipelineWrapper::_Draw(VkCommandBuffer CmdBuffer, vector<VkImageView>I
 
 	for (auto j : Models)
 	{
-		UpdateWorldMatrixDescriptor(j->GetWorld().GetBuffer());
+		WorldMatrixBuffer.SetMatrix(j->GetRotation(), j->GetTranslation());
 		j->Draw(CmdBuffer);
 	}
 

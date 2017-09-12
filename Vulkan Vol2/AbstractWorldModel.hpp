@@ -12,15 +12,18 @@ class AbstractWorldModel:
 	public AbstractModelBase<T>
 {
 protected:
-	WorldBuffer World;
+	glm::vec3 rotation;
+	glm::vec3 translation;
 public:
-	AbstractWorldModel(LogicDeviceWrapper Device, glm::vec3 rotation);
+	AbstractWorldModel(glm::vec3 rotation, glm::vec3 translation = glm::vec3(0));
 	~AbstractWorldModel();
-	WorldBuffer GetWorld();
+	glm::vec3 GetRotation();
+	glm::vec3 GetTranslation();
 };
 
 template<class T>
-inline AbstractWorldModel<T>::AbstractWorldModel(LogicDeviceWrapper Device, glm::vec3 rotation):AbstractModelBase<T>(), World(Device, rotation)
+inline AbstractWorldModel<T>::AbstractWorldModel(glm::vec3 rotation, glm::vec3 translation)
+	:AbstractModelBase<T>(), rotation(rotation), translation(translation)
 {
 
 }
@@ -31,7 +34,13 @@ inline AbstractWorldModel<T>::~AbstractWorldModel()
 }
 
 template<class T>
-inline WorldBuffer AbstractWorldModel<T>::GetWorld()
+inline glm::vec3 AbstractWorldModel<T>::GetRotation()
 {
-	return World;
+	return rotation;
+}
+
+template<class T>
+inline glm::vec3 AbstractWorldModel<T>::GetTranslation()
+{
+	return translation;
 }

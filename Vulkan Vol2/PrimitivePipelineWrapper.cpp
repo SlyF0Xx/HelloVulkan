@@ -28,7 +28,7 @@ vector<VkAttachmentDescription> PrimitivePipelineWrapper::InitAttachments(VkSurf
 	Attachments[0].flags = 0;
 	Attachments[0].format = SurfaceFormat.format;
 	Attachments[0].samples = Sample;
-	Attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE; //Õ≈ «¿¡€“‹!
+	Attachments[0].loadOp = VK_ATTACHMENT_LOAD_OP_LOAD; //Õ≈ «¿¡€“‹!
 	Attachments[0].storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	Attachments[0].stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 	Attachments[0].stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -115,10 +115,10 @@ vector<VkDescriptorSet> PrimitivePipelineWrapper::InitDescriptors(LogicDeviceWra
 	return Descriptor;
 }
 
-void PrimitivePipelineWrapper::UpdateViewPtojMatrixDescriptor(VkBuffer MatrixBuffer)
+void PrimitivePipelineWrapper::UpdateViewPtojMatrixDescriptor()
 {
 	VkDescriptorBufferInfo BufferDescriptor;
-	BufferDescriptor.buffer = MatrixBuffer;
+	BufferDescriptor.buffer = ViewPtojMatrixBuffer;
 	BufferDescriptor.offset = 0;
 	BufferDescriptor.range = VK_WHOLE_SIZE;
 
@@ -137,10 +137,10 @@ void PrimitivePipelineWrapper::UpdateViewPtojMatrixDescriptor(VkBuffer MatrixBuf
 	vkUpdateDescriptorSets(Device.GetLogicDevice(), 1, &WriteDescriptorSetInfo, 0, nullptr);
 }
 
-void PrimitivePipelineWrapper::UpdateWorldMatrixDescriptor(VkBuffer MatrixBuffer)
+void PrimitivePipelineWrapper::UpdateWorldMatrixDescriptor()
 {
 	VkDescriptorBufferInfo BufferDescriptor;
-	BufferDescriptor.buffer = MatrixBuffer;
+	BufferDescriptor.buffer = WorldMatrixBuffer.GetBuffer();
 	BufferDescriptor.offset = 0;
 	BufferDescriptor.range = VK_WHOLE_SIZE;
 
@@ -161,9 +161,12 @@ void PrimitivePipelineWrapper::UpdateWorldMatrixDescriptor(VkBuffer MatrixBuffer
 
 PrimitivePipelineWrapper::PrimitivePipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer ViewProjMatrixBuffer):
 	PrimitiveBasePipelineWrapper<PrimitiveVertex, AbstractWorldModel<PrimitiveVertex>>("Prim.vert.spv", "Prim.frag.spv", InitVertexInputDesc(), InitVertexInputAttrDesc(), InitAttachments(SurfaceFormat),
-		logger, device, InitDescriptorSetsLayout(device), InitDescriptors(device))
+		logger, device, InitDescriptorSetsLayout(device)),
+	ViewPtojMatrixBuffer(ViewProjMatrixBuffer), WorldMatrixBuffer(device, glm::vec3())
 {
-	UpdateViewPtojMatrixDescriptor(ViewProjMatrixBuffer);
+	InitDescriptors(device);
+	UpdateViewPtojMatrixDescriptor();
+	UpdateWorldMatrixDescriptor();
 }
 
 PrimitivePipelineWrapper::~PrimitivePipelineWrapper()
@@ -172,82 +175,6 @@ PrimitivePipelineWrapper::~PrimitivePipelineWrapper()
 
 void PrimitivePipelineWrapper::_Draw(VkCommandBuffer CmdBuffer, vector<VkImageView>ImageViews)
 {
-	vector<VkImageView> IV(ImageViews.begin(), ImageViews.end());
-
-	VkImageCreateInfo DepthImageInfo;
-	DepthImageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-	DepthImageInfo.pNext = NULL;
-	DepthImageInfo.flags = 0;
-	DepthImageInfo.imageType = VK_IMAGE_TYPE_2D;
-	DepthImageInfo.format = DepthFormat;
-	DepthImageInfo.extent.height = 561;
-	DepthImageInfo.extent.width = 884;
-	DepthImageInfo.extent.depth = 1;
-	DepthImageInfo.mipLevels = 1;
-	DepthImageInfo.arrayLayers = 1;
-	DepthImageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-	DepthImageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-	DepthImageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-
-	vector<uint32_t> indexes;
-	if (Device.GetQueuesFamilies().size() == 1)
-	{
-		DepthImageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-		DepthImageInfo.queueFamilyIndexCount = 1;
-		uint32_t index = Device.GetQueuesFamilies()[0].Index;
-		DepthImageInfo.pQueueFamilyIndices = &index;
-	}
-	else
-	{
-		DepthImageInfo.sharingMode = VK_SHARING_MODE_CONCURRENT;
-		DepthImageInfo.queueFamilyIndexCount = Device.GetQueuesFamilies().size();
-
-		for (int i(0); i < Device.GetQueuesFamilies().size(); i++)
-		{
-			indexes.push_back(Device.GetQueuesFamilies()[i].Index);
-		}
-		DepthImageInfo.pQueueFamilyIndices = indexes.data();
-	}
-	DepthImageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;// VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-
-	VkImage DepthImage;
-	logger->checkResults(vkCreateImage(Device.GetLogicDevice(), &DepthImageInfo, nullptr, &DepthImage));
-
-	VkMemoryRequirements memReqs;
-	vkGetImageMemoryRequirements(Device.GetLogicDevice(), DepthImage, &memReqs);
-
-	VkMemoryAllocateInfo MemoryAllocInfo;
-	MemoryAllocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	MemoryAllocInfo.pNext = NULL;
-	MemoryAllocInfo.allocationSize = memReqs.size;
-	MemoryAllocInfo.memoryTypeIndex = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;// | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT | VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT; //VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-
-	VkDeviceMemory memory;
-	vkAllocateMemory(Device.GetLogicDevice(), &MemoryAllocInfo, nullptr, &memory);
-
-	vkBindImageMemory(Device.GetLogicDevice(), DepthImage, memory, 0);
-
-	VkImageSubresourceRange DepthSubRange;
-	DepthSubRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
-	DepthSubRange.baseMipLevel = 0;
-	DepthSubRange.levelCount = 1;
-	DepthSubRange.baseArrayLayer = 0;
-	DepthSubRange.layerCount = 1;
-
-	VkImageViewCreateInfo DepthImageViewInfo{};
-	DepthImageViewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-	DepthImageViewInfo.pNext = NULL;
-	DepthImageViewInfo.flags = 0;
-	DepthImageViewInfo.image = DepthImage;
-	DepthImageViewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-	DepthImageViewInfo.format = DepthFormat;
-	DepthImageViewInfo.subresourceRange = DepthSubRange;
-
-	VkImageView DepthView;
-	vkCreateImageView(Device.GetLogicDevice(), &DepthImageViewInfo, nullptr, &DepthView);
-	IV.push_back(DepthView);
-
-
 	vector<VkClearValue> clearValues;
 	clearValues.push_back(VkClearValue());
 	clearValues[0].color = { { 0.1f, 0.0f, 0.2f, 0.1f } };
@@ -259,8 +186,8 @@ void PrimitivePipelineWrapper::_Draw(VkCommandBuffer CmdBuffer, vector<VkImageVi
 	FramebufferCreateInfo.pNext = NULL;
 	FramebufferCreateInfo.flags = 0;
 	FramebufferCreateInfo.renderPass = RenderPass;
-	FramebufferCreateInfo.attachmentCount = IV.size();
-	FramebufferCreateInfo.pAttachments = IV.data();
+	FramebufferCreateInfo.attachmentCount = ImageViews.size();
+	FramebufferCreateInfo.pAttachments = ImageViews.data();
 	FramebufferCreateInfo.height = 561;
 	FramebufferCreateInfo.width = 884;
 	FramebufferCreateInfo.layers = 1;
@@ -306,7 +233,7 @@ void PrimitivePipelineWrapper::_Draw(VkCommandBuffer CmdBuffer, vector<VkImageVi
 
 	for (auto j : Models)
 	{
-		UpdateWorldMatrixDescriptor(j->GetWorld().GetBuffer());
+		WorldMatrixBuffer.SetMatrix(j->GetRotation(), j->GetTranslation());
 		j->Draw(CmdBuffer);
 	}
 

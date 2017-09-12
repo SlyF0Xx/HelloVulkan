@@ -3,78 +3,20 @@
 
 template<class Vertex, class Model>
 class PrimitiveBasePipelineWrapper :
-	public AbstractPipelineWrapper<Vertex, Model, 1>
+	public AbstractPipelineWrapper<Vertex, Model, 2>
 {
-private:
-	VkShaderModule loadSPIRVShader(std::string filename);
 protected:
-	LogicDeviceWrapper Device;
-	Logger *logger;
-
 	VkRenderPass RenderPass;
 	VkPipelineLayout PipelineLayout;
-	vector<VkDescriptorSet> Descriptors;
 
+	vector<VkDescriptorSetLayout> DescriptorsLay;
 public:
 	VkRenderPass GetRenderPass();
 	PrimitiveBasePipelineWrapper(string vertShader, string fragShader,
 		vector<VkVertexInputBindingDescription> VertexInputDesc, vector<VkVertexInputAttributeDescription> VertexInputAttrDesc, vector<VkAttachmentDescription> Attachments,
-		Logger *logger, LogicDeviceWrapper Device, vector<VkDescriptorSetLayout> DescriptorSets, vector<VkDescriptorSet> descriptors);
+		Logger *logger, LogicDeviceWrapper Device, vector<VkDescriptorSetLayout> DescriptorSets);
 	virtual ~PrimitiveBasePipelineWrapper();
 };
-
-
-template<class Vertex, class Model>
-inline VkShaderModule PrimitiveBasePipelineWrapper<Vertex, Model>::loadSPIRVShader(std::string filename)
-{
-	size_t shaderSize;
-	char* shaderCode;
-
-#if defined(__ANDROID__)
-	// Load shader from compressed asset
-	AAsset* asset = AAssetManager_open(androidApp->activity->assetManager, filename.c_str(), AASSET_MODE_STREAMING);
-	assert(asset);
-	shaderSize = AAsset_getLength(asset);
-	assert(shaderSize > 0);
-
-	shaderCode = new char[shaderSize];
-	AAsset_read(asset, shaderCode, shaderSize);
-	AAsset_close(asset);
-#else
-	std::ifstream is(filename, std::ios::binary | std::ios::in | std::ios::ate);
-
-	if (is.is_open())
-	{
-		shaderSize = is.tellg();
-		is.seekg(0, std::ios::beg);
-		// Copy file contents into a buffer
-		shaderCode = new char[shaderSize];
-		is.read(shaderCode, shaderSize);
-		is.close();
-		assert(shaderSize > 0);
-	}
-#endif
-	if (shaderCode)
-	{
-		// Create a new shader module that will be used for pipeline creation
-		VkShaderModuleCreateInfo moduleCreateInfo{};
-		moduleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-		moduleCreateInfo.codeSize = shaderSize;
-		moduleCreateInfo.pCode = (uint32_t*)shaderCode;
-
-		VkShaderModule shaderModule;
-		logger->checkResults(vkCreateShaderModule(Device.GetLogicDevice(), &moduleCreateInfo, NULL, &shaderModule));
-
-		delete[] shaderCode;
-
-		return shaderModule;
-	}
-	else
-	{
-		logger->LogMessage("Error: Could not open shader file \"" + filename + "\"");
-		return VK_NULL_HANDLE;
-	}
-}
 
 template<class Vertex, class Model>
 inline VkRenderPass PrimitiveBasePipelineWrapper<Vertex, Model>::GetRenderPass()
@@ -85,10 +27,9 @@ inline VkRenderPass PrimitiveBasePipelineWrapper<Vertex, Model>::GetRenderPass()
 template<class Vertex, class Model>
 PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string vertShader, string fragShader,
 	vector<VkVertexInputBindingDescription> VertexInputDesc, vector<VkVertexInputAttributeDescription> VertexInputAttrDesc, vector<VkAttachmentDescription> Attachments,
-	Logger *logger, LogicDeviceWrapper device, vector<VkDescriptorSetLayout> DescriptorSets, vector<VkDescriptorSet> descriptors) :Device(device), Descriptors(descriptors)
+	Logger *logger, LogicDeviceWrapper device, vector<VkDescriptorSetLayout> DescriptorSets) 
+		:AbstractPipelineWrapper<Vertex, Model, 2>(logger, device), DescriptorsLay(DescriptorSets)
 {
-	this->logger = logger;
-
 	VkShaderModule VertexShader = loadSPIRVShader(vertShader);
 	VkShaderModule PixelShader = loadSPIRVShader(fragShader);
 
@@ -123,8 +64,6 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 
 
 
-	//«‰ÂÒ¸ Ï˚ ÏÓÊÂÏ ‰Ó·‡‚ËÚ¸ Ò‚ÓË Descriptor Set Layout-˚ Ë Descriptor Layout-˚
-
 	VkPipelineLayoutCreateInfo LayoutInfo{};
 	LayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
 	LayoutInfo.pNext = NULL;
@@ -143,7 +82,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	InputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 	InputAssemblyInfo.pNext = NULL;
 	InputAssemblyInfo.flags = 0;
-	InputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+	InputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; // VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;// ;
 	InputAssemblyInfo.primitiveRestartEnable = VK_FALSE; //–¿ÁÓ·‡Ú¸Òˇ!!
 
 
@@ -173,7 +112,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	RasterizationInfo.depthClampEnable = VK_FALSE;
 	RasterizationInfo.rasterizerDiscardEnable = VK_FALSE; //Õ≈ “–Œ√¿“‹ Õ» Œ√ƒ¿ ¬ ∆»«Õ»!!! ¬€ »ƒ€¬¿≈“ »«Œ¡–¿∆≈Õ»≈ œŒ—À≈ –¿—“≈–»«¿÷»»
 	RasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
-	RasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+	RasterizationInfo.cullMode = VK_CULL_MODE_NONE;// VK_CULL_MODE_FRONT_BIT; // ;
 	RasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; // VK_FRONT_FACE_COUNTER_CLOCKWISE;// VK_FRONT_FACE_COUNTER_CLOCKWISE;
 	RasterizationInfo.depthBiasEnable = VK_FALSE; //ÕÂ ‡ÁÓ·‡ÎÒˇ
 	RasterizationInfo.depthBiasConstantFactor = 0.0;
@@ -217,8 +156,14 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 
 
 	VkPipelineColorBlendAttachmentState AttachState{};
-	AttachState.blendEnable = VK_FALSE;
-	AttachState.colorWriteMask = 0xf;
+	AttachState.blendEnable = VK_TRUE;
+	AttachState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_COLOR;
+	AttachState.dstColorBlendFactor = VK_BLEND_FACTOR_DST_COLOR;
+	AttachState.colorBlendOp = VK_BLEND_OP_ADD;
+	AttachState.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+	AttachState.dstAlphaBlendFactor = VK_BLEND_FACTOR_DST_ALPHA;
+	AttachState.alphaBlendOp = VK_BLEND_OP_ADD;
+	AttachState.colorWriteMask = VK_LOGIC_OP_OR;
 
 	VkPipelineColorBlendStateCreateInfo ColorBlendInfo{};
 	ColorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;

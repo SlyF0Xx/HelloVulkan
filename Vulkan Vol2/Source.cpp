@@ -16,15 +16,28 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#ifndef TINYOBJLOADER_IMPLEMENTATION
+	#define TINYOBJLOADER_IMPLEMENTATION
+#endif
+
+#ifndef STB_IMAGE_IMPLEMENTATION
+	#define STB_IMAGE_IMPLEMENTATION
+#endif
+
+#include "FirstWorldMaterialModel.h"
 #include "PrimitiveModel.h"
-#include "PrimitivePipelineWrapper.h"
 #include "PrimitiveIndexedModel.h"
 #include "ColorModel.h"
-#include "ColorPipelineWrapper.h"
 #include "PrimitiveCamera.h"
-#include "AbstractWorldModel.hpp"
+#include "LightCamera.h"
+#include "ShadowCamera.h"
+#include "PrimitiveScene.h"
+#include "MaterialPipelineWrapper.h"
+#include "MatrixBuffer.h"
+#include "TransformationBuffer.h"
 
 #pragma comment (lib, "vulkan-1.lib")
+
 
 using namespace std;
 
@@ -43,7 +56,7 @@ HINSTANCE HInstance;
 
 
 Logger logger;
-AbstractCamera* ControlCamera;
+AbstractControlCamera* ControlCamera;
 LRESULT CALLBACK WinProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	switch (msg)
@@ -78,6 +91,30 @@ VKAPI_ATTR VkBool32 VKAPI_CALL DebugReportCallback(
 	logger.LogMessage(pMessage);
 	return VK_FALSE;
 }
+
+
+void ComputeTangentBasis(
+	const glm::vec3& P1, const glm::vec3& P2, const glm::vec3& P3,
+	const glm::vec2& UV1, const glm::vec2& UV2, const glm::vec2& UV3,
+	glm::vec3 &tangent, glm::vec3 &bitangent)
+{
+	glm::vec3 Edge1 = P2 - P1;
+	glm::vec3 Edge2 = P3 - P1;
+	glm::vec2 Edge1uv = UV2 - UV1;
+	glm::vec2 Edge2uv = UV3 - UV1;
+
+	float cp = Edge1uv.y * Edge2uv.x - Edge1uv.x * Edge2uv.y;
+
+	if (cp != 0.0f) {
+		float mul = 1.0f / cp;
+		tangent = (Edge1 * -Edge2uv.y + Edge2 * Edge1uv.y) * mul;
+		bitangent = (Edge1 * -Edge2uv.x + Edge2 * Edge1uv.x) * mul;
+
+		glm::normalize(tangent);
+		glm::normalize(bitangent);
+	}
+}
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {
@@ -174,19 +211,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		logger.LogMessage("Generate");
 
-		PrimitiveModel* mode = new PrimitiveModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0], glm::vec3());
+		PrimitiveModel* mode = new PrimitiveModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0], glm::vec3(0, 0, 0), glm::vec3(0,0,6));
 		//PrimitiveIndexedModel* Imode = new PrimitiveIndexedModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
 		//PrimitiveModel* mode = PrimitiveModel::create(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
 		//PrimitiveIndexedModel* Imode = PrimitiveIndexedModel::create(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
-		ColorModel * model = new ColorModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0], glm::vec3());
-
-
-		//MatrixesBufer MatrixesMainBufer = MatrixesBufer(foundation.GetPhysDevices()[0].GetLogicDevices()[0]);
-
-		PrimitiveCamera camera = PrimitiveCamera(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], foundation.GetSurfaceFormat(), ScreenX, ScreenY, zoom);
-		ControlCamera = &camera;
-		static_cast<PrimitivePipelineWrapper*>(camera.Pipelines[0])->Models.push_back((AbstractWorldModel<PrimitiveVertex>*)mode);
-		static_cast<ColorPipelineWrapper*>(camera.Pipelines[1])->Models.push_back((AbstractWorldModel<ColorVertex>*)model);
+		ColorModel * model = new ColorModel(foundation.GetPhysDevices()[0].GetLogicDevices()[0], glm::vec3(), glm::vec3(0, 0, 5));
 
 
 		logger.LogMessage("Done");
@@ -203,15 +232,113 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		logger.checkResults(vkCreateSemaphore(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(), &SemaphoreInfo, nullptr, &CalculationReady));
 
 		logger.LogMessage("Prepare");
-		for (int i(0); i < foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetImages().size(); i++)
+		
+		glm::vec3 tangient, bitangient;
+		/*ComputeTangentBasis(
+			glm::vec3(-6.0f, 1.5f, 0.0f),
+			glm::vec3(6.0f, 1.5f, 0.0f),
+			glm::vec3(6.0f, 0.0f, 2.0f),
+			glm::vec2(1.0f, 1.0f),
+			glm::vec2(1.0f, 0.0f),
+			glm::vec2(0.0f, 1.0f),
+
+			/*glm::vec3(6.0f, -2.0f, 0.0f),
+			glm::vec3(-6.0f, 1.5f, 0.0f),
+			glm::vec3(6.0f, 1.5f, 0.0f),
+			glm::vec2(0.0f, 1.0f),
+			glm::vec2(1.0f, 1.0f),
+			glm::vec2(1.0f, 0.0f),
+			tangient, bitangient
+		);*/
+
+		/*tinyobj::attrib_t attrib;
+		vector<tinyobj::shape_t> shapes;
+		vector<tinyobj::material_t> materials;
+		std::string err;
+
+		tinyobj::LoadObj(&attrib, &shapes, &materials, &err, "C:/Users/SlyFox/Downloads/Box/BOX.obj", "C:/Users/SlyFox/Downloads/Box/");
+		FirstWorldMaterialModel* m;
+		
+		vector<TexturedVertex> vert;
+		vector<MaterialPipelineWrapper*> pipes;
+		/*for (int i(0); i < shapes[1].mesh.indices.size(); i+=3)
 		{
-			camera.Draw(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[i], foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetImages()[i]);
+			glm::vec3 pos1(attrib.vertices[3 * shapes[1].mesh.indices[i].vertex_index],
+				attrib.vertices[3 * shapes[1].mesh.indices[i].vertex_index + 1], attrib.vertices[3 * shapes[1].mesh.indices[i].vertex_index + 2]);
+			glm::vec3 pos2(attrib.vertices[3 * shapes[1].mesh.indices[i+1].vertex_index],
+				attrib.vertices[3 * shapes[1].mesh.indices[i+1].vertex_index + 1], attrib.vertices[3 * shapes[1].mesh.indices[i+1].vertex_index + 2]);
+			glm::vec3 pos3(attrib.vertices[3 * shapes[1].mesh.indices[i+2].vertex_index],
+				attrib.vertices[3 * shapes[1].mesh.indices[i+2].vertex_index + 1], attrib.vertices[3 * shapes[1].mesh.indices[i+2].vertex_index + 2]);
+
+			glm::vec2 uv1(attrib.texcoords[2 * shapes[1].mesh.indices[i].texcoord_index], attrib.texcoords[2 * shapes[1].mesh.indices[i].texcoord_index + 1]);
+			glm::vec2 uv2(attrib.texcoords[2 * shapes[1].mesh.indices[i+1].texcoord_index], attrib.texcoords[2 * shapes[1].mesh.indices[i+1].texcoord_index + 1]);
+			glm::vec2 uv3(attrib.texcoords[2 * shapes[1].mesh.indices[i+2].texcoord_index], attrib.texcoords[2 * shapes[1].mesh.indices[i+2].texcoord_index + 1]);
+
+			glm::vec3 norm1(attrib.normals[3 * shapes[1].mesh.indices[i].normal_index],
+				attrib.normals[3 * shapes[1].mesh.indices[i].normal_index + 1], attrib.normals[3 * shapes[1].mesh.indices[i].normal_index + 2]);
+			glm::vec3 norm2(attrib.normals[3 * shapes[1].mesh.indices[i+1].normal_index],
+				attrib.normals[3 * shapes[1].mesh.indices[i+1].normal_index + 1], attrib.normals[3 * shapes[1].mesh.indices[i+1].normal_index + 2]);
+			glm::vec3 norm3(attrib.normals[3 * shapes[1].mesh.indices[i+2].normal_index],
+				attrib.normals[3 * shapes[1].mesh.indices[i+2].normal_index + 1], attrib.normals[3 * shapes[1].mesh.indices[i+2].normal_index + 2]);
+
+			ComputeTangentBasis(pos1, pos2, pos3, uv1, uv2, uv3, tangient, bitangient);
+			vert.push_back(TexturedVertex(pos1.x, pos1.y, pos1.z, uv1.x, uv1.y, norm1.x, norm1.y, norm1.z, tangient.x, tangient.y, tangient.z, bitangient.x, bitangient.y, bitangient.z, uv1.x, uv1.y));
+
+			vert.push_back(TexturedVertex(pos2.x, pos2.y, pos2.z, uv2.x, uv2.y, norm2.x, norm2.y, norm2.z, tangient.x, tangient.y, tangient.z, bitangient.x, bitangient.y, bitangient.z, uv2.x, uv2.y));
+
+			vert.push_back(TexturedVertex(pos3.x, pos3.y, pos3.z, uv3.x, uv3.y, norm3.x, norm3.y, norm3.z, tangient.x, tangient.y, tangient.z, bitangient.x, bitangient.y, bitangient.z, uv3.x, uv3.y));
 		}
 
-		VkPipelineStageFlags stage = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
 
-		unsigned int ImageIndex;
+		for (auto j : shapes[1].mesh.indices)
+		{
+			vert.push_back(TexturedVertex(attrib.vertices[3 * j.vertex_index], attrib.vertices[3 * j.vertex_index + 1], attrib.vertices[3 * j.vertex_index + 2],
+				attrib.texcoords[2 * j.texcoord_index], 1.0f - attrib.texcoords[2 * j.texcoord_index + 1],
+				attrib.normals[3 * j.normal_index], attrib.normals[3 * j.normal_index + 1], attrib.normals[3 * j.normal_index + 2],
+				attrib.texcoords[2 * j.texcoord_index], 1.0f - attrib.texcoords[2 * j.texcoord_index + 1]));
+		}
 
+		m = new FirstWorldMaterialModel(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], glm::vec3(), glm::vec3(-8, -8, 30), vert);
+		*/
+
+		PrimitiveScene scene(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], ScreenX, ScreenY, zoom, foundation.GetSurfaceFormat(), 
+			foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0], foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0],
+			foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Queues[0]);
+
+
+		//FirstWorldMaterialModel* m = new FirstWorldMaterialModel(&logger, foundation.GetPhysDevices()[0].GetLogicDevices()[0], glm::vec3(), glm::vec3(0,0,6));
+		
+
+		//ControlCamera = static_cast<LightCamera*>(scene.cameras[0]);
+		ControlCamera = static_cast<ShadowCamera*>(scene.cameras[0]);
+
+
+		static_cast<LightPrimitivePipeline*>(static_cast<LightCamera*>(scene.cameras[1])->Pipelines[0])->Models.push_back((AbstractWorldModel<PrimitiveVertex>*)mode);
+		static_cast<LightColorPipeline*>(static_cast<LightCamera*>(scene.cameras[1])->Pipelines[1])->
+			Models.push_back((AbstractWorldModel<ColorVertex>*)model);
+		//static_cast<LightMaterialPipeline*>(static_cast<LightCamera*>(scene.cameras[0])->Pipelines[2])->
+		//	Models.push_back((AbstractWorldModel<TexturedVertex>*)m);
+
+		//static_cast<LightColorPipeline*>(static_cast<LightCamera*>(scene.cameras[0])->Pipelines[1])->Models.push_back((AbstractWorldModel<ColorVertex>*)m);
+
+
+		static_cast<ShadowPrimitivePipeline*>(static_cast<ShadowCamera*>(scene.cameras[0])->Pipelines[0])->Models.push_back((AbstractWorldModel<PrimitiveVertex>*)mode);
+		static_cast<ShadowColorPipeline*>(static_cast<ShadowCamera*>(scene.cameras[0])->Pipelines[1])->
+			Models.push_back((AbstractWorldModel<ColorVertex>*)model);
+		//static_cast<MaterialPipelineWrapper*>(static_cast<ShadowCamera*>(scene.cameras[1])->Pipelines[2])->
+		//	Models.push_back((AbstractWorldMaterialModel<TexturedVertex, PrimitiveVertexBufferWrapper<TexturedVertex>>*)m);
+
+		static_cast<ShadowCamera*>(scene.cameras[0])->loadMatModel("C:/Users/SlyFox/Downloads/Box/BOX.obj", "C:/Users/SlyFox/Downloads/Box/", glm::vec3(-8, 8, 30));
+		static_cast<ShadowCamera*>(scene.cameras[0])->loadMatModel("C:/Users/SlyFox/Downloads/Trunk/tronco.obj", "C:/Users/SlyFox/Downloads/Trunk/", glm::vec3(-8, 12, 50));
+			
+		static_cast<LightCamera*>(scene.cameras[1])->loadMatModel("C:/Users/SlyFox/Downloads/Box/BOX.obj", "C:/Users/SlyFox/Downloads/Box/", glm::vec3(-8, 8, 30));
+		static_cast<LightCamera*>(scene.cameras[1])->loadMatModel("C:/Users/SlyFox/Downloads/Trunk/tronco.obj", "C:/Users/SlyFox/Downloads/Trunk/", glm::vec3(-8, 12, 50));
+
+
+
+		scene.Update();
+		
+		
 		logger.LogMessage("All prepare for draw");
 
 		while (msg.message != WM_QUIT)
@@ -225,40 +352,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			else
 			{
 				logger.LogMessage("Start draw");
-				logger.checkResults(vkAcquireNextImageKHR(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetLogicDevice(),
-					foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetSwapchain(), UINT64_MAX, ImageReady, NULL, &ImageIndex));
 				
-				VkSubmitInfo SubmitInfo;
-				SubmitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-				SubmitInfo.pNext = NULL;
-				SubmitInfo.waitSemaphoreCount = 1;
-				SubmitInfo.pWaitSemaphores = &ImageReady;
-				SubmitInfo.pWaitDstStageMask = &stage;
-				SubmitInfo.commandBufferCount = 1;
-				SubmitInfo.pCommandBuffers = &foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetCommandPools()[0].GetCommandBuffers()[ImageIndex];
-				SubmitInfo.signalSemaphoreCount = 1;
-				SubmitInfo.pSignalSemaphores = &CalculationReady;
+				//static_cast<LightCamera*>(scene.cameras[1])->MainMatrixes.RotateRight();
+				//static_cast<ShadowCamera*>(scene.cameras[0])->TransformationMat.SetMatrix(static_cast<LightCamera*>(scene.cameras[1])->MainMatrixes);
 
-
-
-				logger.checkResults(vkQueueSubmit(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Queues[0], 1, &SubmitInfo ,NULL));
-
-				VkSwapchainKHR swap = foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetSwapchins()[0].GetSwapchain();
-				VkResult* Results = new VkResult[1];
-
-				VkPresentInfoKHR PresentInfo;
-				PresentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-				PresentInfo.pNext = NULL;
-				PresentInfo.waitSemaphoreCount = 1;
-				PresentInfo.pWaitSemaphores = &CalculationReady;
-				PresentInfo.swapchainCount = 1;
-				PresentInfo.pSwapchains = &swap;
-				PresentInfo.pImageIndices = &ImageIndex;
-				PresentInfo.pResults = Results;
-
-				
-				logger.checkResults(vkQueuePresentKHR(foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Queues[0], &PresentInfo));
-				logger.checkResults(Results[0]);
+				scene.Draw(ImageReady, CalculationReady, foundation.GetPhysDevices()[0].GetLogicDevices()[0].GetQueuesFamilies()[0].Queues[0]);
 			}
 		}
 

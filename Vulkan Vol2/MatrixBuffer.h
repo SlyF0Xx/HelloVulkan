@@ -27,6 +27,7 @@ private:
 	VkDescriptorSet Descriptor;
 	glm::vec3 dirView = glm::vec3(0.0f, 0.0f, 1.0f);
 	glm::vec3 dirUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 position = glm::vec3(0.0f, 0.0f, -2.5f);
 	const float scale = glm::pi<double>() / 360.0;
 	LogicDeviceWrapper Devaice;
 public:
@@ -39,7 +40,11 @@ public:
 	MatrixBuffer(LogicDeviceWrapper LogicDevaice, int ScreenX, int ScreenY, float zoom);
 	~MatrixBuffer();
 
+
+	glm::vec3 GetDirView();
+	glm::vec3 GetPosition();
 	VkBuffer GetBuffer();
+	void Update();
 	void GoForward();
 	void GoBackward();
 	void StrafeLeft();

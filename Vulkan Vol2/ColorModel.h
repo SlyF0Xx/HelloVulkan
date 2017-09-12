@@ -12,7 +12,7 @@ class ColorModel :
 	public AbstractWorldModel<ColorVertex>
 {
 public:
-	ColorModel(LogicDeviceWrapper Device, glm::vec3 rotation);
+	ColorModel(LogicDeviceWrapper Device, glm::vec3 rotation, glm::vec3 translation = glm::vec3(0));
 	void Draw(VkCommandBuffer CmdBuffer);
 	~ColorModel();
 protected:

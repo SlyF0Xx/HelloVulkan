@@ -1,6 +1,6 @@
 #pragma once
 #include "CommandPoolWrapper.h"
-#include "SwapchinWrapper.h"
+#include "SwapchainWrapper.h"
 
 using namespace std;
 
@@ -17,12 +17,12 @@ private:
 	VkDevice LogicDevice;
 	vector<FamilyOfQueue> QueuesFamilies;
 	vector<CommandPoolWrapper> CommandPools;
-	vector<SwapchinWrapper> Swapchins;
+	vector<SwapchainWrapper> Swapchins;
 	Logger* logger;
 public:
 	void addSwapchain(VkSwapchainKHR swapchain);
 	VkDevice GetLogicDevice();
-	vector<SwapchinWrapper> &GetSwapchins();
+	vector<SwapchainWrapper> &GetSwapchins();
 	void addCommandPool(int num);
 	void addCommandBuffers(CommandPoolWrapper* CommandPool, bool isPrimary, int count);
 	vector<FamilyOfQueue> &GetQueuesFamilies();
