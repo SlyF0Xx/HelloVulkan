@@ -2,11 +2,11 @@ Start
 Win surface
 Added callback
 Added callback
-OBJ[0x1] : CREATE DebugReportCallbackEXT object 0x1dece52a000
+OBJ[0x1] : CREATE DebugReportCallbackEXT object 0x20a33e9bbe0
 Added callback
 Added callback
-OBJ[0x2] : CREATE PhysicalDevice object 0x1ded0eb8a90
-OBJ[0x3] : CREATE PhysicalDevice object 0x1ded0eb87f0
+OBJ[0x2] : CREATE PhysicalDevice object 0x20a36047cc0
+OBJ[0x3] : CREATE PhysicalDevice object 0x20a36047cf0
 AMD Radeon (TM) R5 M330
 2
 AMD Radeon(TM) R5 Graphics
@@ -67,12 +67,12 @@ Device Extension: VK_AMD_shader_explicit_vertex_parameter (C:\WINDOWS\System32\.
 Device Extension: VK_AMD_gcn_shader (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
 Device Extension: VK_AMD_draw_indirect_count (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
 Device Extension: VK_AMD_negative_viewport_height (C:\WINDOWS\System32\.\amdvlk64.dll) version 0.0.1
-OBJ[0x5] : CREATE Device object 0x1ded3226c40
-OBJ[0x6] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1ded3227820
-OBJ[0x7] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1ded3227878
-OBJ[0x8] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x1ded32278d0
+OBJ[0x5] : CREATE Device object 0x20a383218f0
+OBJ[0x6] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x20a383224d0
+OBJ[0x7] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x20a38322528
+OBJ[0x8] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT object 0x20a38322580
 Generate Logic Devacie
-000001DED3226C40
+0000020A383218F0
 Support!
 Finding format
 Finding present mode
@@ -88,26 +88,26 @@ OBJ[0xe] : CREATE CommandPool object 0x7
 Generate Queue Family
 OBJ[0xf] : CREATE CommandPool object 0x8
 Generate Queue Family
-OBJ[0x10] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded95e1cd0
-OBJ[0x11] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded95f6eb0
-OBJ[0x12] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded95fc080
-OBJ[0x13] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded9601250
-OBJ[0x14] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded9606420
-OBJ[0x15] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded960b5f0
+OBJ[0x10] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383f8da0
+OBJ[0x11] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a3837cd50
+OBJ[0x12] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a38381f20
+OBJ[0x13] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383870f0
+OBJ[0x14] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a3838c2c0
+OBJ[0x15] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a38391490
 Generate Command Pool
-OBJ[0x16] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded9617970
-OBJ[0x17] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded961b0f0
-OBJ[0x18] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded961e870
-OBJ[0x19] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded9621ff0
-OBJ[0x1a] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded9625770
-OBJ[0x1b] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded9628ef0
+OBJ[0x16] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383994c0
+OBJ[0x17] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a3839cc40
+OBJ[0x18] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383a03c0
+OBJ[0x19] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383a3b40
+OBJ[0x1a] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383a72c0
+OBJ[0x1b] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383aaa40
 Generate Command Pool
-OBJ[0x1c] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded9632040
-OBJ[0x1d] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded9634c90
-OBJ[0x1e] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded96378e0
-OBJ[0x1f] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded963a530
-OBJ[0x20] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded963d180
-OBJ[0x21] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x1ded963fdd0
+OBJ[0x1c] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383b5ba0
+OBJ[0x1d] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383b87f0
+OBJ[0x1e] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383bb440
+OBJ[0x1f] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383be090
+OBJ[0x20] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383c0ce0
+OBJ[0x21] : CREATE VK_DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT object 0x20a383c3930
 Generate Command Pool
 Generate
 OBJ[0x22] : CREATE Buffer object 0x9
@@ -459,387 +459,6 @@ Descriptor Set 0xdc bound on pipeline VK_PIPELINE_BIND_POINT_GRAPHICS
 OBJ[0x148] : CREATE Framebuffer object 0x12f
 Descriptor Set 0xf1 bound on pipeline VK_PIPELINE_BIND_POINT_GRAPHICS
 All prepare for draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
-Start draw
 Start draw
 Start draw
 Start draw

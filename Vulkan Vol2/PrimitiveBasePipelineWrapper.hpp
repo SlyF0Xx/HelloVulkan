@@ -1,4 +1,4 @@
-п»ї#pragma once
+#pragma once
 #include "AbstractPipelineWrapper.hpp"
 
 template<class Vertex, class Model>
@@ -41,7 +41,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	Stages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
 	Stages[0].module = VertexShader;
 	Stages[0].pName = "main";
-	Stages[0].pSpecializationInfo = NULL; //Р—Р°Р±Р°РІРЅР°СЏ С€С‚СѓРєР°, РїРѕР·РІРѕР»СЏРµС‚ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ С€РµР№РґРµСЂРЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹
+	Stages[0].pSpecializationInfo = NULL; //Забавная штука, позволяет инициализировать шейдерные константы
 
 										  //Pixel Stage
 	Stages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -50,7 +50,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	Stages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 	Stages[1].module = PixelShader;
 	Stages[1].pName = "main";
-	Stages[1].pSpecializationInfo = NULL; //Р—Р°Р±Р°РІРЅР°СЏ С€С‚СѓРєР°, РїРѕР·РІРѕР»СЏРµС‚ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ С€РµР№РґРµСЂРЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹
+	Stages[1].pSpecializationInfo = NULL; //Забавная штука, позволяет инициализировать шейдерные константы
 
 
 	VkPipelineVertexInputStateCreateInfo VertexInputInfo{};
@@ -82,8 +82,8 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	InputAssemblyInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 	InputAssemblyInfo.pNext = NULL;
 	InputAssemblyInfo.flags = 0;
-	InputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-	InputAssemblyInfo.primitiveRestartEnable = VK_FALSE; //ГђГЂГ§Г®ГЎГ°Г ГІГјГ±Гї!!
+	InputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST; // VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;// ;
+	InputAssemblyInfo.primitiveRestartEnable = VK_FALSE; //РАзобраться!!
 
 
 
@@ -110,19 +110,19 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	RasterizationInfo.pNext = NULL;
 	RasterizationInfo.flags = 0;
 	RasterizationInfo.depthClampEnable = VK_FALSE;
-	RasterizationInfo.rasterizerDiscardEnable = VK_FALSE; //ГЌГ… Г’ГђГЋГѓГЂГ’Гњ ГЌГ€ГЉГЋГѓГ„ГЂ Г‚ Г†Г€Г‡ГЌГ€!!! Г‚Г›ГЉГ€Г„Г›Г‚ГЂГ…Г’ Г€Г‡ГЋГЃГђГЂГ†Г…ГЌГ€Г… ГЏГЋГ‘Г‹Г… ГђГЂГ‘Г’Г…ГђГ€Г‡ГЂГ–Г€Г€
+	RasterizationInfo.rasterizerDiscardEnable = VK_FALSE; //НЕ ТРОГАТЬ НИКОГДА В ЖИЗНИ!!! ВЫКИДЫВАЕТ ИЗОБРАЖЕНИЕ ПОСЛЕ РАСТЕРИЗАЦИИ
 	RasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
-	RasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+	RasterizationInfo.cullMode = VK_CULL_MODE_NONE;// VK_CULL_MODE_FRONT_BIT; // ;
 	RasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; // VK_FRONT_FACE_COUNTER_CLOCKWISE;// VK_FRONT_FACE_COUNTER_CLOCKWISE;
-	RasterizationInfo.depthBiasEnable = VK_FALSE; //ГЌГҐ Г°Г Г§Г®ГЎГ°Г Г«Г±Гї
+	RasterizationInfo.depthBiasEnable = VK_FALSE; //Не разобрался
 	RasterizationInfo.depthBiasConstantFactor = 0.0;
-	RasterizationInfo.depthBiasClamp = 0.0; //ГЌГҐ Г°Г Г§Г®ГЎГ°Г Г«Г±Гї
-	RasterizationInfo.depthBiasSlopeFactor = 0.0; //ГЌГҐ Г°Г Г§Г®ГЎГ°Г Г«Г±Гї
+	RasterizationInfo.depthBiasClamp = 0.0; //Не разобрался
+	RasterizationInfo.depthBiasSlopeFactor = 0.0; //Не разобрался
 	RasterizationInfo.lineWidth = 1.0;
 
 
 	VkSampleCountFlagBits Sample = VK_SAMPLE_COUNT_1_BIT;
-	//ГѓГ®ГўГ®Г°ГїГІ, ГЅГІГ® ГЇГ°Г® anti-aliasing
+	//Говорят, это про anti-aliasing
 	VkPipelineMultisampleStateCreateInfo MultisampleInfo{};
 	MultisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	MultisampleInfo.pNext = NULL;
@@ -143,8 +143,8 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	DepthStensilInfo.depthTestEnable = VK_TRUE;
 	DepthStensilInfo.depthWriteEnable = VK_TRUE;
 	DepthStensilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
-	DepthStensilInfo.depthBoundsTestEnable = VK_FALSE; //Г…Г±Г«ГЁ VK_TRUE, ГІГ® Г¤ГҐГ«Г ГҐГІ Г®ГІГ¤ГҐГ«ГјГ­Г»Г© z ГІГҐГ±ГІ Г­Г  minDepthBounds ГЁ maxDepthBounds
-	DepthStensilInfo.stencilTestEnable = VK_FALSE; // ГђГ Г§Г®ГЎГ°Г ГІГјГ±Гї ГЁ Г¤Г®ГЎГ ГўГЁГІГј - ГЄГ«Г Г±Г±Г­Г Гї, ГўГ°Г®Г¤ГҐ, ГёГІГіГЄГ 
+	DepthStensilInfo.depthBoundsTestEnable = VK_FALSE; //Если VK_TRUE, то делает отдельный z тест на minDepthBounds и maxDepthBounds
+	DepthStensilInfo.stencilTestEnable = VK_FALSE; // Разобраться и добавить - классная, вроде, штука
 
 	DepthStensilInfo.back.failOp = VK_STENCIL_OP_KEEP;
 	DepthStensilInfo.back.passOp = VK_STENCIL_OP_KEEP;
@@ -154,8 +154,17 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	DepthStensilInfo.front = DepthStensilInfo.back;
 
 
-
+	
 	VkPipelineColorBlendAttachmentState AttachState{};
+	/*AttachState.blendEnable = VK_TRUE;
+	AttachState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_COLOR;
+	AttachState.dstColorBlendFactor = VK_BLEND_FACTOR_DST_COLOR;
+	AttachState.colorBlendOp = VK_BLEND_OP_ADD;
+	AttachState.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+	AttachState.dstAlphaBlendFactor = VK_BLEND_FACTOR_DST_ALPHA;
+	AttachState.alphaBlendOp = VK_BLEND_OP_ADD;
+	AttachState.colorWriteMask = VK_LOGIC_OP_OR;
+	*/
 	AttachState.blendEnable = VK_FALSE;
 	AttachState.colorWriteMask = 0xf;
 
@@ -163,7 +172,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	ColorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 	ColorBlendInfo.pNext = NULL;
 	ColorBlendInfo.flags = 0;
-	//ColorBlendInfo.logicOpEnable = VK_FALSE; //ГЌГ Г±ГЄГ®Г«ГјГЄГ® Гї ГЇГ®Г­ГїГ«, Г¬Г®Г¦Г­Г® Г±Г¤ГҐГ«Г ГІГј Г®ГЇГҐГ°Г Г¶ГЁГѕ ГЇГ® Г±Г°Г ГўГ­ГҐГ­ГЁГѕ Г± ГІГҐГЄГіГ№ГЁГ¬ Г§Г­Г Г·ГҐГ­ГЁГҐГ¬ Гў ГЄГ Г¤Г°ГҐ
+	//ColorBlendInfo.logicOpEnable = VK_FALSE; //Насколько я понял, можно сделать операцию по сравнению с текущим значением в кадре
 	ColorBlendInfo.attachmentCount = 1;
 	ColorBlendInfo.pAttachments = &AttachState;
 
@@ -191,7 +200,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 
 	vector<VkSubpassDescription> Subpasses;
 	Subpasses.push_back(VkSubpassDescription());
-	Subpasses[0].flags = 0; // Г‚Г®Г§Г¬Г®Г¦Г­Г» ГўГ Г°ГЁГ Г­ГІГ»
+	Subpasses[0].flags = 0; // Возможны варианты
 	Subpasses[0].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	Subpasses[0].colorAttachmentCount = 1;
 	Subpasses[0].pColorAttachments = &colorReference;
