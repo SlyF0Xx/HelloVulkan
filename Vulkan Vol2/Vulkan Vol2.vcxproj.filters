@@ -13,167 +13,293 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{902e5f57-4ffa-40d4-876a-158067741229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="User">
+      <UniqueIdentifier>{ba07ddf3-4942-4637-ab8a-0c3221680ff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Заголовочные файлы">
+      <UniqueIdentifier>{243a3b6b-2fc3-4fc2-9316-3d8a867a0270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="User\Заголовочные файлы">
+      <UniqueIdentifier>{07e0c12f-1cdf-44ba-9100-6741b0fb57de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Файлы исходного кода">
+      <UniqueIdentifier>{2a9e8f4d-5148-4086-aebc-3715c4f00c22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="User\Файлы исходного кода">
+      <UniqueIdentifier>{da9aa174-bad4-4af8-8394-5845f13e05fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="Foundation.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysDeviceWrapper.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="LogicDeviceWrapper.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="CommandPoolWrapper.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="SwapchinWrapper.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="AbstractVertex.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="PrimitiveVertex.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="PrimitivePipelineWrapper.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="PrimitiveModel.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="PrimitiveIndexBuffer.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="AbstractIndexBufferWrapper.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="PrimitiveIndexedModel.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorVertex.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorPipelineWrapper.cpp">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
-    <ClCompile Include="ColorModel.cpp">
-      <Filter>Файлы исходного кода</Filter>
+    <ClCompile Include="AbstractBasePipelineWrapper.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="AbstractCamera.cpp">
-      <Filter>Файлы исходного кода</Filter>
+      <Filter>Engine\Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="AbstractBasePipelineWrapper.cpp">
-      <Filter>Файлы исходного кода</Filter>
+    <ClCompile Include="AbstractControlCamera.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="PrimitiveCamera.cpp">
-      <Filter>Файлы исходного кода</Filter>
+    <ClCompile Include="AbstractIndexBufferWrapper.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractVertex.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandPoolWrapper.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="Foundation.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="LogicDeviceWrapper.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysDeviceWrapper.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorModel.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorPipelineWrapper.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorVertex.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="LightColorPipeline.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="LightPrimitivePipeline.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="LightCamera.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="MatrixBuffer.cpp">
-      <Filter>Файлы исходного кода</Filter>
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveCamera.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveIndexBuffer.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveIndexedModel.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveModel.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitivePipelineWrapper.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveVertex.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
     </ClCompile>
     <ClCompile Include="WorldBuffer.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowPrimitivePipeline.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowColorPipeline.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformationBuffer.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowCamera.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="SwapchainWrapper.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveMaterial.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractMaterial.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractScene.cpp">
+      <Filter>Engine\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="PrimitiveScene.cpp">
+      <Filter>User\Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="FirstWorldMaterialModel.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialPipelineWrapper.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="TexturedVertex.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="LightMaterialPipeline.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Foundation.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="Logger.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysDeviceWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="LogicDeviceWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandPoolWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="SwapchinWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractVertex.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveVertex.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitivePipelineWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveModel.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractModel.hpp">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractModelBase.hpp">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractPipelineWrapper.hpp">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveIndexBuffer.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractVertexBufferWrapper.hpp">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveVertexBufferWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractIndexedModel.hpp">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractIndexBufferWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveIndexedModel.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="PrimitiveBasePipelineWrapper.hpp">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="ColorVertex.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorPipelineWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorModel.h">
-      <Filter>Заголовочные файлы</Filter>
-    </ClInclude>
-    <ClInclude Include="AbstractCamera.h">
+    <ClInclude Include="LightBasePipeline.hpp">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="AbstractBasePipelineWrapper.h">
-      <Filter>Заголовочные файлы</Filter>
+      <Filter>Engine\Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="PrimitiveCamera.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="AbstractCamera.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="MatrixBuffer.h">
-      <Filter>Заголовочные файлы</Filter>
+    <ClInclude Include="AbstractControlCamera.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractIndexBufferWrapper.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractIndexedModel.hpp">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractModel.hpp">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractModelBase.hpp">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractPipelineWrapper.hpp">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractVertex.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractVertexBufferWrapper.hpp">
+      <Filter>Engine\Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="AbstractWorldModel.hpp">
-      <Filter>Заголовочные файлы</Filter>
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandPoolWrapper.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Foundation.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="LogicDeviceWrapper.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysDeviceWrapper.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorModel.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorPipelineWrapper.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorVertex.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="LightCamera.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="LightColorPipeline.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="LightPrimitivePipeline.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveCamera.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveIndexBuffer.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveIndexedModel.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveModel.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitivePipelineWrapper.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveVertex.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveVertexBufferWrapper.h">
+      <Filter>User\Заголовочные файлы</Filter>
     </ClInclude>
     <ClInclude Include="WorldBuffer.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixBuffer.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowPrimitivePipeline.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowPrimitiveBasePipelineWrapper.hpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowColorPipeline.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationBuffer.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="LightPrimitiveBasePipelineWrapper.hpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowCamera.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="SwapchainWrapper.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveMaterial.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractMaterial.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractScene.h">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractWorldMaterialModel.hpp">
+      <Filter>Engine\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveScene.h">
+      <Filter>User\Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="FirstWorldMaterialModel.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialPipelineWrapper.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractMaterialPipelineWrapper.hpp">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturedVertex.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="LightMaterialPipeline.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -189,6 +315,36 @@
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="Prim.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="FirstShadowPrim.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="FirstShadowPrim.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="FirstShadowColor.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="FirstShadowColor.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="ShadowPrim.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="ShadowPrim.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="ShadowColor.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="ShadowColor.frag">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="Material.vert">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="Material.frag">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

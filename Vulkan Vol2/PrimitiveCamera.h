@@ -1,11 +1,11 @@
 #pragma once
-#include "AbstractCamera.h"
+#include "AbstractControlCamera.h"
 #include "PrimitivePipelineWrapper.h"
 #include "ColorPipelineWrapper.h"
 #include "MatrixBuffer.h"
 
 class PrimitiveCamera :
-	public AbstractCamera
+	public AbstractControlCamera
 {
 private:
 	MatrixBuffer MainMatrixes;

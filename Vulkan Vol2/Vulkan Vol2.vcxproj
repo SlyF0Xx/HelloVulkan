@@ -79,8 +79,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <ExecutablePath>C:\VulkanSDK\1.0.51.0\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\VulkanSDK\1.0.51.0\Third-Party\Include;C:\VulkanSDK\1.0.51.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\VulkanSDK\1.0.51.0\Lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\SlyFox\Documents\Visual Studio 2017\Projects\Vulkan Vol2\Lib;C:\VulkanSDK\1.0.51.0\Third-Party\Include;C:\VulkanSDK\1.0.51.0\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\SlyFox\Documents\Visual Studio 2017\Projects\Vulkan Vol2\Lib;C:\VulkanSDK\1.0.51.0\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -154,46 +154,75 @@
   <ItemGroup>
     <ClCompile Include="AbstractBasePipelineWrapper.cpp" />
     <ClCompile Include="AbstractCamera.cpp" />
+    <ClCompile Include="AbstractControlCamera.cpp" />
+    <ClCompile Include="AbstractMaterial.cpp" />
+    <ClCompile Include="AbstractScene.cpp" />
     <ClCompile Include="AbstractVertex.cpp" />
     <ClCompile Include="ColorModel.cpp" />
     <ClCompile Include="ColorPipelineWrapper.cpp" />
     <ClCompile Include="ColorVertex.cpp" />
     <ClCompile Include="CommandPoolWrapper.cpp" />
+    <ClCompile Include="FirstWorldMaterialModel.cpp" />
+    <ClCompile Include="LightColorPipeline.cpp" />
+    <ClCompile Include="LightMaterialPipeline.cpp" />
+    <ClCompile Include="LightPrimitivePipeline.cpp" />
     <ClCompile Include="Foundation.cpp" />
     <ClCompile Include="AbstractIndexBufferWrapper.cpp" />
+    <ClCompile Include="LightCamera.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="LogicDeviceWrapper.cpp" />
+    <ClCompile Include="MaterialPipelineWrapper.cpp" />
     <ClCompile Include="MatrixBuffer.cpp" />
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="PhysDeviceWrapper.cpp" />
     <ClCompile Include="PrimitiveCamera.cpp" />
     <ClCompile Include="PrimitiveIndexBuffer.cpp" />
     <ClCompile Include="PrimitiveIndexedModel.cpp" />
+    <ClCompile Include="PrimitiveMaterial.cpp" />
     <ClCompile Include="PrimitiveModel.cpp" />
     <ClCompile Include="PrimitivePipelineWrapper.cpp" />
+    <ClCompile Include="PrimitiveScene.cpp" />
     <ClCompile Include="PrimitiveVertex.cpp" />
+    <ClCompile Include="ShadowCamera.cpp" />
+    <ClCompile Include="ShadowColorPipeline.cpp" />
+    <ClCompile Include="ShadowPrimitivePipeline.cpp" />
     <ClCompile Include="Source.cpp" />
-    <ClCompile Include="SwapchinWrapper.cpp" />
+    <ClCompile Include="SwapchainWrapper.cpp" />
+    <ClCompile Include="TexturedVertex.cpp" />
+    <ClCompile Include="TransformationBuffer.cpp" />
     <ClCompile Include="WorldBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractBasePipelineWrapper.h" />
     <ClInclude Include="AbstractCamera.h" />
+    <ClInclude Include="AbstractControlCamera.h" />
     <ClInclude Include="AbstractIndexedModel.hpp" />
     <ClInclude Include="AbstractIndexBufferWrapper.h" />
+    <ClInclude Include="AbstractMaterial.h" />
+    <ClInclude Include="AbstractMaterialPipelineWrapper.hpp" />
     <ClInclude Include="AbstractModel.hpp" />
     <ClInclude Include="AbstractModelBase.hpp" />
     <ClInclude Include="AbstractPipelineWrapper.hpp" />
+    <ClInclude Include="AbstractScene.h" />
     <ClInclude Include="AbstractVertex.h" />
+    <ClInclude Include="AbstractWorldMaterialModel.hpp" />
     <ClInclude Include="AbstractWorldModel.hpp" />
     <ClInclude Include="ColorModel.h" />
     <ClInclude Include="ColorPipelineWrapper.h" />
     <ClInclude Include="ColorVertex.h" />
+    <ClInclude Include="FirstWorldMaterialModel.h" />
+    <ClInclude Include="LightColorPipeline.h" />
+    <ClInclude Include="LightMaterialPipeline.h" />
+    <ClInclude Include="LightPrimitiveBasePipelineWrapper.hpp" />
+    <ClInclude Include="LightPrimitivePipeline.h" />
+    <ClInclude Include="LightCamera.h" />
+    <ClInclude Include="MaterialPipelineWrapper.h" />
     <ClInclude Include="MatrixBuffer.h" />
     <ClInclude Include="PrimitiveBasePipelineWrapper.hpp" />
     <ClInclude Include="PrimitiveCamera.h" />
+    <ClInclude Include="LightBasePipeline.hpp" />
     <ClInclude Include="PrimitiveIndexBuffer.h" />
     <ClInclude Include="PrimitiveIndexedModel.h" />
+    <ClInclude Include="PrimitiveMaterial.h" />
     <ClInclude Include="PrimitiveModel.h" />
     <ClInclude Include="PrimitivePipelineWrapper.h" />
     <ClInclude Include="AbstractVertexBufferWrapper.hpp" />
@@ -203,15 +232,32 @@
     <ClInclude Include="LogicDeviceWrapper.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PhysDeviceWrapper.h" />
+    <ClInclude Include="PrimitiveScene.h" />
     <ClInclude Include="PrimitiveVertex.h" />
     <ClInclude Include="PrimitiveVertexBufferWrapper.h" />
-    <ClInclude Include="SwapchinWrapper.h" />
+    <ClInclude Include="ShadowCamera.h" />
+    <ClInclude Include="ShadowColorPipeline.h" />
+    <ClInclude Include="ShadowPrimitiveBasePipelineWrapper.hpp" />
+    <ClInclude Include="ShadowPrimitivePipeline.h" />
+    <ClInclude Include="SwapchainWrapper.h" />
+    <ClInclude Include="TexturedVertex.h" />
+    <ClInclude Include="TransformationBuffer.h" />
     <ClInclude Include="WorldBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="FirstShadowColor.frag" />
+    <None Include="FirstShadowColor.vert" />
+    <None Include="FirstShadowPrim.frag" />
+    <None Include="FirstShadowPrim.vert" />
+    <None Include="Material.frag" />
+    <None Include="Material.vert" />
     <None Include="Prim.frag" />
     <None Include="Prim.vert" />
+    <None Include="ShadowColor.frag" />
+    <None Include="ShadowColor.vert" />
+    <None Include="ShadowPrim.frag" />
+    <None Include="ShadowPrim.vert" />
     <None Include="Text.vert" />
     <None Include="Text.frag" />
   </ItemGroup>

@@ -18,52 +18,34 @@ void PrimitiveCamera::keyPressed(uint32_t keyCode)
 		case 'W':
 		{
 			MainMatrixes.GoForward();
-
-			static_cast<PrimitivePipelineWrapper*>(Pipelines[0])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
-			static_cast<ColorPipelineWrapper*>(Pipelines[1])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
 			break;
 		}
 		case 's':
 		case 'S':
 		{
 			MainMatrixes.GoBackward();
-
-			static_cast<PrimitivePipelineWrapper*>(Pipelines[0])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
-			static_cast<ColorPipelineWrapper*>(Pipelines[1])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
 			break;
 		}
 		case 'a':
 		case 'A':
 		{
 			MainMatrixes.StrafeLeft();
-
-			static_cast<PrimitivePipelineWrapper*>(Pipelines[0])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
-			static_cast<ColorPipelineWrapper*>(Pipelines[1])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
 			break;
 		}		
 		case 'd':
 		case 'D':
 		{
 			MainMatrixes.StrafeRight();
-
-			static_cast<PrimitivePipelineWrapper*>(Pipelines[0])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
-			static_cast<ColorPipelineWrapper*>(Pipelines[1])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
 			break;
 		}
 		case VK_SPACE:
 		{
 			MainMatrixes.Up();
-
-			static_cast<PrimitivePipelineWrapper*>(Pipelines[0])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
-			static_cast<ColorPipelineWrapper*>(Pipelines[1])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
 			break;
 		}
 		case VK_SHIFT:
 		{
 			MainMatrixes.Down();
-
-			static_cast<PrimitivePipelineWrapper*>(Pipelines[0])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
-			static_cast<ColorPipelineWrapper*>(Pipelines[1])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
 			break;
 		}
 
@@ -71,9 +53,6 @@ void PrimitiveCamera::keyPressed(uint32_t keyCode)
 		case 'Q':
 		{
 			MainMatrixes.RotateLeft();
-
-			static_cast<PrimitivePipelineWrapper*>(Pipelines[0])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
-			static_cast<ColorPipelineWrapper*>(Pipelines[1])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
 			break;
 		}
 
@@ -81,9 +60,6 @@ void PrimitiveCamera::keyPressed(uint32_t keyCode)
 		case 'E':
 		{
 			MainMatrixes.RotateRight();
-
-			static_cast<PrimitivePipelineWrapper*>(Pipelines[0])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
-			static_cast<ColorPipelineWrapper*>(Pipelines[1])->UpdateViewPtojMatrixDescriptor(MainMatrixes.GetBuffer());
 			break;
 		}
 	default:
@@ -113,14 +89,14 @@ void PrimitiveCamera::Draw(VkCommandBuffer CmdBuffer, VkImage image)
 	VkImageView ColorView;
 	vkCreateImageView(Device.GetLogicDevice(), &ColorImageViewInfo, nullptr, &ColorView);
 
-	VkCommandBufferBeginInfo BeginInfo;
+	/*VkCommandBufferBeginInfo BeginInfo;
 	BeginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	BeginInfo.pNext = NULL;
 	BeginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
 	BeginInfo.pInheritanceInfo = NULL;
 
 	logger->checkResults(vkBeginCommandBuffer(CmdBuffer, &BeginInfo));
-
+	*/
 	vkCmdBindPipeline(CmdBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, static_cast<ColorPipelineWrapper*>(Pipelines[1])->GetPipeline());
 
 	static_cast<ColorPipelineWrapper*>(Pipelines[1])->Draw(CmdBuffer, { ColorView });

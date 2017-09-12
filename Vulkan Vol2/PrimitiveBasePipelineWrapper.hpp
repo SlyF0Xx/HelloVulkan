@@ -1,80 +1,22 @@
-#pragma once
+п»ї#pragma once
 #include "AbstractPipelineWrapper.hpp"
 
 template<class Vertex, class Model>
 class PrimitiveBasePipelineWrapper :
-	public AbstractPipelineWrapper<Vertex, Model, 1>
+	public AbstractPipelineWrapper<Vertex, Model, 2>
 {
-private:
-	VkShaderModule loadSPIRVShader(std::string filename);
 protected:
-	LogicDeviceWrapper Device;
-	Logger *logger;
-
 	VkRenderPass RenderPass;
 	VkPipelineLayout PipelineLayout;
-	vector<VkDescriptorSet> Descriptors;
 
+	vector<VkDescriptorSetLayout> DescriptorsLay;
 public:
 	VkRenderPass GetRenderPass();
 	PrimitiveBasePipelineWrapper(string vertShader, string fragShader,
 		vector<VkVertexInputBindingDescription> VertexInputDesc, vector<VkVertexInputAttributeDescription> VertexInputAttrDesc, vector<VkAttachmentDescription> Attachments,
-		Logger *logger, LogicDeviceWrapper Device, vector<VkDescriptorSetLayout> DescriptorSets, vector<VkDescriptorSet> descriptors);
+		Logger *logger, LogicDeviceWrapper Device, vector<VkDescriptorSetLayout> DescriptorSets);
 	virtual ~PrimitiveBasePipelineWrapper();
 };
-
-
-template<class Vertex, class Model>
-inline VkShaderModule PrimitiveBasePipelineWrapper<Vertex, Model>::loadSPIRVShader(std::string filename)
-{
-	size_t shaderSize;
-	char* shaderCode;
-
-#if defined(__ANDROID__)
-	// Load shader from compressed asset
-	AAsset* asset = AAssetManager_open(androidApp->activity->assetManager, filename.c_str(), AASSET_MODE_STREAMING);
-	assert(asset);
-	shaderSize = AAsset_getLength(asset);
-	assert(shaderSize > 0);
-
-	shaderCode = new char[shaderSize];
-	AAsset_read(asset, shaderCode, shaderSize);
-	AAsset_close(asset);
-#else
-	std::ifstream is(filename, std::ios::binary | std::ios::in | std::ios::ate);
-
-	if (is.is_open())
-	{
-		shaderSize = is.tellg();
-		is.seekg(0, std::ios::beg);
-		// Copy file contents into a buffer
-		shaderCode = new char[shaderSize];
-		is.read(shaderCode, shaderSize);
-		is.close();
-		assert(shaderSize > 0);
-	}
-#endif
-	if (shaderCode)
-	{
-		// Create a new shader module that will be used for pipeline creation
-		VkShaderModuleCreateInfo moduleCreateInfo{};
-		moduleCreateInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-		moduleCreateInfo.codeSize = shaderSize;
-		moduleCreateInfo.pCode = (uint32_t*)shaderCode;
-
-		VkShaderModule shaderModule;
-		logger->checkResults(vkCreateShaderModule(Device.GetLogicDevice(), &moduleCreateInfo, NULL, &shaderModule));
-
-		delete[] shaderCode;
-
-		return shaderModule;
-	}
-	else
-	{
-		logger->LogMessage("Error: Could not open shader file \"" + filename + "\"");
-		return VK_NULL_HANDLE;
-	}
-}
 
 template<class Vertex, class Model>
 inline VkRenderPass PrimitiveBasePipelineWrapper<Vertex, Model>::GetRenderPass()
@@ -85,10 +27,9 @@ inline VkRenderPass PrimitiveBasePipelineWrapper<Vertex, Model>::GetRenderPass()
 template<class Vertex, class Model>
 PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string vertShader, string fragShader,
 	vector<VkVertexInputBindingDescription> VertexInputDesc, vector<VkVertexInputAttributeDescription> VertexInputAttrDesc, vector<VkAttachmentDescription> Attachments,
-	Logger *logger, LogicDeviceWrapper device, vector<VkDescriptorSetLayout> DescriptorSets, vector<VkDescriptorSet> descriptors) :Device(device), Descriptors(descriptors)
+	Logger *logger, LogicDeviceWrapper device, vector<VkDescriptorSetLayout> DescriptorSets) 
+		:AbstractPipelineWrapper<Vertex, Model, 2>(logger, device), DescriptorsLay(DescriptorSets)
 {
-	this->logger = logger;
-
 	VkShaderModule VertexShader = loadSPIRVShader(vertShader);
 	VkShaderModule PixelShader = loadSPIRVShader(fragShader);
 
@@ -100,7 +41,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	Stages[0].stage = VK_SHADER_STAGE_VERTEX_BIT;
 	Stages[0].module = VertexShader;
 	Stages[0].pName = "main";
-	Stages[0].pSpecializationInfo = NULL; //Забавная штука, позволяет инициализировать шейдерные константы
+	Stages[0].pSpecializationInfo = NULL; //Р—Р°Р±Р°РІРЅР°СЏ С€С‚СѓРєР°, РїРѕР·РІРѕР»СЏРµС‚ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ С€РµР№РґРµСЂРЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹
 
 										  //Pixel Stage
 	Stages[1].sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -109,7 +50,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	Stages[1].stage = VK_SHADER_STAGE_FRAGMENT_BIT;
 	Stages[1].module = PixelShader;
 	Stages[1].pName = "main";
-	Stages[1].pSpecializationInfo = NULL; //Забавная штука, позволяет инициализировать шейдерные константы
+	Stages[1].pSpecializationInfo = NULL; //Р—Р°Р±Р°РІРЅР°СЏ С€С‚СѓРєР°, РїРѕР·РІРѕР»СЏРµС‚ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°С‚СЊ С€РµР№РґРµСЂРЅС‹Рµ РєРѕРЅСЃС‚Р°РЅС‚С‹
 
 
 	VkPipelineVertexInputStateCreateInfo VertexInputInfo{};
@@ -122,8 +63,6 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	VertexInputInfo.pVertexAttributeDescriptions = VertexInputAttrDesc.data();
 
 
-
-	//Здесь мы можем добавить свои Descriptor Set Layout-ы и Descriptor Layout-ы
 
 	VkPipelineLayoutCreateInfo LayoutInfo{};
 	LayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
@@ -144,7 +83,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	InputAssemblyInfo.pNext = NULL;
 	InputAssemblyInfo.flags = 0;
 	InputAssemblyInfo.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
-	InputAssemblyInfo.primitiveRestartEnable = VK_FALSE; //РАзобраться!!
+	InputAssemblyInfo.primitiveRestartEnable = VK_FALSE; //ГђГЂГ§Г®ГЎГ°Г ГІГјГ±Гї!!
 
 
 
@@ -171,19 +110,19 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	RasterizationInfo.pNext = NULL;
 	RasterizationInfo.flags = 0;
 	RasterizationInfo.depthClampEnable = VK_FALSE;
-	RasterizationInfo.rasterizerDiscardEnable = VK_FALSE; //НЕ ТРОГАТЬ НИКОГДА В ЖИЗНИ!!! ВЫКИДЫВАЕТ ИЗОБРАЖЕНИЕ ПОСЛЕ РАСТЕРИЗАЦИИ
+	RasterizationInfo.rasterizerDiscardEnable = VK_FALSE; //ГЌГ… Г’ГђГЋГѓГЂГ’Гњ ГЌГ€ГЉГЋГѓГ„ГЂ Г‚ Г†Г€Г‡ГЌГ€!!! Г‚Г›ГЉГ€Г„Г›Г‚ГЂГ…Г’ Г€Г‡ГЋГЃГђГЂГ†Г…ГЌГ€Г… ГЏГЋГ‘Г‹Г… ГђГЂГ‘Г’Г…ГђГ€Г‡ГЂГ–Г€Г€
 	RasterizationInfo.polygonMode = VK_POLYGON_MODE_FILL;
 	RasterizationInfo.cullMode = VK_CULL_MODE_BACK_BIT;
 	RasterizationInfo.frontFace = VK_FRONT_FACE_CLOCKWISE; // VK_FRONT_FACE_COUNTER_CLOCKWISE;// VK_FRONT_FACE_COUNTER_CLOCKWISE;
-	RasterizationInfo.depthBiasEnable = VK_FALSE; //Не разобрался
+	RasterizationInfo.depthBiasEnable = VK_FALSE; //ГЌГҐ Г°Г Г§Г®ГЎГ°Г Г«Г±Гї
 	RasterizationInfo.depthBiasConstantFactor = 0.0;
-	RasterizationInfo.depthBiasClamp = 0.0; //Не разобрался
-	RasterizationInfo.depthBiasSlopeFactor = 0.0; //Не разобрался
+	RasterizationInfo.depthBiasClamp = 0.0; //ГЌГҐ Г°Г Г§Г®ГЎГ°Г Г«Г±Гї
+	RasterizationInfo.depthBiasSlopeFactor = 0.0; //ГЌГҐ Г°Г Г§Г®ГЎГ°Г Г«Г±Гї
 	RasterizationInfo.lineWidth = 1.0;
 
 
 	VkSampleCountFlagBits Sample = VK_SAMPLE_COUNT_1_BIT;
-	//Говорят, это про anti-aliasing
+	//ГѓГ®ГўГ®Г°ГїГІ, ГЅГІГ® ГЇГ°Г® anti-aliasing
 	VkPipelineMultisampleStateCreateInfo MultisampleInfo{};
 	MultisampleInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	MultisampleInfo.pNext = NULL;
@@ -204,8 +143,8 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	DepthStensilInfo.depthTestEnable = VK_TRUE;
 	DepthStensilInfo.depthWriteEnable = VK_TRUE;
 	DepthStensilInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
-	DepthStensilInfo.depthBoundsTestEnable = VK_FALSE; //Если VK_TRUE, то делает отдельный z тест на minDepthBounds и maxDepthBounds
-	DepthStensilInfo.stencilTestEnable = VK_FALSE; // Разобраться и добавить - классная, вроде, штука
+	DepthStensilInfo.depthBoundsTestEnable = VK_FALSE; //Г…Г±Г«ГЁ VK_TRUE, ГІГ® Г¤ГҐГ«Г ГҐГІ Г®ГІГ¤ГҐГ«ГјГ­Г»Г© z ГІГҐГ±ГІ Г­Г  minDepthBounds ГЁ maxDepthBounds
+	DepthStensilInfo.stencilTestEnable = VK_FALSE; // ГђГ Г§Г®ГЎГ°Г ГІГјГ±Гї ГЁ Г¤Г®ГЎГ ГўГЁГІГј - ГЄГ«Г Г±Г±Г­Г Гї, ГўГ°Г®Г¤ГҐ, ГёГІГіГЄГ 
 
 	DepthStensilInfo.back.failOp = VK_STENCIL_OP_KEEP;
 	DepthStensilInfo.back.passOp = VK_STENCIL_OP_KEEP;
@@ -224,7 +163,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 	ColorBlendInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
 	ColorBlendInfo.pNext = NULL;
 	ColorBlendInfo.flags = 0;
-	//ColorBlendInfo.logicOpEnable = VK_FALSE; //Насколько я понял, можно сделать операцию по сравнению с текущим значением в кадре
+	//ColorBlendInfo.logicOpEnable = VK_FALSE; //ГЌГ Г±ГЄГ®Г«ГјГЄГ® Гї ГЇГ®Г­ГїГ«, Г¬Г®Г¦Г­Г® Г±Г¤ГҐГ«Г ГІГј Г®ГЇГҐГ°Г Г¶ГЁГѕ ГЇГ® Г±Г°Г ГўГ­ГҐГ­ГЁГѕ Г± ГІГҐГЄГіГ№ГЁГ¬ Г§Г­Г Г·ГҐГ­ГЁГҐГ¬ Гў ГЄГ Г¤Г°ГҐ
 	ColorBlendInfo.attachmentCount = 1;
 	ColorBlendInfo.pAttachments = &AttachState;
 
@@ -252,7 +191,7 @@ PrimitiveBasePipelineWrapper<Vertex, Model>::PrimitiveBasePipelineWrapper(string
 
 	vector<VkSubpassDescription> Subpasses;
 	Subpasses.push_back(VkSubpassDescription());
-	Subpasses[0].flags = 0; // Возможны варианты
+	Subpasses[0].flags = 0; // Г‚Г®Г§Г¬Г®Г¦Г­Г» ГўГ Г°ГЁГ Г­ГІГ»
 	Subpasses[0].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	Subpasses[0].colorAttachmentCount = 1;
 	Subpasses[0].pColorAttachments = &colorReference;

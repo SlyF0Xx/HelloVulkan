@@ -26,12 +26,15 @@ private:
 	vector<VkDescriptorSetLayout> Descriptors;
 	VkDescriptorSet Descriptor;
 	LogicDeviceWrapper Devaice;
+
+	void CreateBuffer();
 public:
 	glm::mat4 WorldMatrix;
 
-	WorldBuffer(LogicDeviceWrapper LogicDevaice, glm::vec3 rotation);
+	WorldBuffer(LogicDeviceWrapper LogicDevaice, glm::vec3 rotation, glm::vec3 translation = glm::vec3(0));
 	~WorldBuffer();
 
 	VkBuffer GetBuffer();
+	void SetMatrix(glm::vec3 rotation, glm::vec3 translation);
 };
 

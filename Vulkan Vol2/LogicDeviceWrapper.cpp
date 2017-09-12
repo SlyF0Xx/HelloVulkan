@@ -8,7 +8,7 @@ void LogicDeviceWrapper::addSwapchain(VkSwapchainKHR swapchain)
 	vector<VkImage> Images(CountOfImages);
 	logger->checkResults(vkGetSwapchainImagesKHR(LogicDevice, swapchain, &CountOfImages, Images.data()));
 
-	Swapchins.push_back(SwapchinWrapper(swapchain, Images, logger));
+	Swapchins.push_back(SwapchainWrapper(swapchain, Images, logger));
 }
 
 VkDevice LogicDeviceWrapper::GetLogicDevice()
@@ -16,7 +16,7 @@ VkDevice LogicDeviceWrapper::GetLogicDevice()
 	return LogicDevice;
 }
 
-vector<SwapchinWrapper> &LogicDeviceWrapper::GetSwapchins()
+vector<SwapchainWrapper> &LogicDeviceWrapper::GetSwapchins()
 {
 	return Swapchins;
 }
@@ -26,7 +26,7 @@ void LogicDeviceWrapper::addCommandPool(int num)
 	VkCommandPoolCreateInfo CommandPoolInfo;
 	CommandPoolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	CommandPoolInfo.pNext = NULL;
-	CommandPoolInfo.flags = 0;
+	CommandPoolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 	CommandPoolInfo.queueFamilyIndex = num;
 
 	VkCommandPool temp;

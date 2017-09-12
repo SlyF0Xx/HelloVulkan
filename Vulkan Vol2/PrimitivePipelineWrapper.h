@@ -15,13 +15,19 @@ private:
 
 	//vector<VkDescriptorSetLayout> DescriptorSets;
 
+	WorldBuffer WorldMatrixBuffer;
+	VkBuffer ViewPtojMatrixBuffer;
+
+	void UpdateViewPtojMatrixDescriptor();
+	void UpdateWorldMatrixDescriptor();
+
+	vector<VkDescriptorSet> Descriptors;
+
 	static const VkFormat DepthFormat = VK_FORMAT_D32_SFLOAT_S8_UINT;
 	static const VkSampleCountFlagBits Sample = VK_SAMPLE_COUNT_1_BIT;
 public:
 	PrimitivePipelineWrapper(Logger * logger, LogicDeviceWrapper device, VkSurfaceFormatKHR SurfaceFormat, VkBuffer ViewProjMatrixBuffer);
 	~PrimitivePipelineWrapper();
 	void _Draw(VkCommandBuffer CmdBuffer, vector<VkImageView> ImageViews);
-	void UpdateViewPtojMatrixDescriptor(VkBuffer MatrixBuffer);
-	void UpdateWorldMatrixDescriptor(VkBuffer MatrixBuffer);
 };
 

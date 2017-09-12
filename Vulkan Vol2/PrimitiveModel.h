@@ -9,7 +9,7 @@ class PrimitiveModel :
 	public AbstractModel<PrimitiveVertex, PrimitiveVertexBufferWrapper<PrimitiveVertex>>
 {
 public:
-	PrimitiveModel(LogicDeviceWrapper Device, glm::vec3 rotation);
+	PrimitiveModel(LogicDeviceWrapper Device, glm::vec3 rotation, glm::vec3 translation);
 	void Draw(VkCommandBuffer CmdBuffer);
 	~PrimitiveModel();
 protected:

@@ -5,86 +5,67 @@ MatrixBuffer::~MatrixBuffer()
 {
 }
 
+glm::vec3 MatrixBuffer::GetDirView()
+{
+	return dirView;
+}
+
+glm::vec3 MatrixBuffer::GetPosition()
+{
+	return position;
+}
+
 VkBuffer MatrixBuffer::GetBuffer()
 {
 	return Buffer;
 }
 
-void MatrixBuffer::GoForward()
+void MatrixBuffer::Update()
 {
-	Matrixs.ViewMatrix = glm::translate(Matrixs.ViewMatrix,  glm::vec3(Matrixs.ViewMatrix[2]));//glm::vec3(0.0f, 0.0f, 1.0f));// 
-	// Map uniform buffer and update it
+	Matrixs.ViewMatrix = glm::lookAt(position, position+dirView, dirUp);
+
 	uint8_t *pData;
 	vkMapMemory(Devaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
 	memcpy(pData, &Matrixs, sizeof(Matrixs));
 	// Unmap after data has been copied
 	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
 	vkUnmapMemory(Devaice.GetLogicDevice(), memory);
+}
+
+void MatrixBuffer::GoForward()
+{
+	position += dirView*0.1f;
+	Update();
 }
 
 void MatrixBuffer::GoBackward()
 {
-	Matrixs.ViewMatrix = glm::translate(Matrixs.ViewMatrix, -glm::vec3(Matrixs.ViewMatrix[2]));
-
-	// Map uniform buffer and update it
-	uint8_t *pData;
-	vkMapMemory(Devaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
-	memcpy(pData, &Matrixs, sizeof(Matrixs));
-	// Unmap after data has been copied
-	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-	vkUnmapMemory(Devaice.GetLogicDevice(), memory);
+	position -= dirView*0.1f;
+	Update();
 }
 
 void MatrixBuffer::StrafeLeft()
 {
-	Matrixs.ViewMatrix = glm::translate(Matrixs.ViewMatrix, glm::vec3(Matrixs.ViewMatrix[0]));
-
-	// Map uniform buffer and update it
-	uint8_t *pData;
-	vkMapMemory(Devaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
-	memcpy(pData, &Matrixs, sizeof(Matrixs));
-	// Unmap after data has been copied
-	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-	vkUnmapMemory(Devaice.GetLogicDevice(), memory);
+	position -= glm::cross(dirView, dirUp)*0.1f;
+	Update();
 }
 
 void MatrixBuffer::StrafeRight()
 {
-	Matrixs.ViewMatrix = glm::translate(Matrixs.ViewMatrix, -glm::vec3(Matrixs.ViewMatrix[0]));
-
-	// Map uniform buffer and update it
-	uint8_t *pData;
-	vkMapMemory(Devaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
-	memcpy(pData, &Matrixs, sizeof(Matrixs));
-	// Unmap after data has been copied
-	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-	vkUnmapMemory(Devaice.GetLogicDevice(), memory);
+	position += glm::cross(dirView, dirUp)*0.1f;
+	Update();
 }
 
 void MatrixBuffer::Up()
 {
-	Matrixs.ViewMatrix = glm::translate(Matrixs.ViewMatrix, glm::vec3(Matrixs.ViewMatrix[1]));
-	
-	// Map uniform buffer and update it
-	uint8_t *pData;
-	vkMapMemory(Devaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
-	memcpy(pData, &Matrixs, sizeof(Matrixs));
-	// Unmap after data has been copied
-	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-	vkUnmapMemory(Devaice.GetLogicDevice(), memory);
+	position += dirUp*0.1f;
+	Update();
 }
 
 void MatrixBuffer::Down()
 {
-	Matrixs.ViewMatrix = glm::translate(Matrixs.ViewMatrix, -glm::vec3(Matrixs.ViewMatrix[1]));
-
-	// Map uniform buffer and update it
-	uint8_t *pData;
-	vkMapMemory(Devaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
-	memcpy(pData, &Matrixs, sizeof(Matrixs));
-	// Unmap after data has been copied
-	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-	vkUnmapMemory(Devaice.GetLogicDevice(), memory);
+	position -= dirUp*0.1f;
+	Update();
 }
 
 void MatrixBuffer::RotateUp()
@@ -124,43 +105,19 @@ void MatrixBuffer::RotateDown()
 void MatrixBuffer::RotateLeft()
 {
 	glm::mat4 identity(1);
-	identity = glm::rotate(identity, scale, -glm::vec3(Matrixs.ViewMatrix[1]));
-	Matrixs.ViewMatrix[0] = identity* Matrixs.ViewMatrix[0];
-	Matrixs.ViewMatrix[3] = identity* Matrixs.ViewMatrix[3];
+	identity = glm::rotate(identity, scale, dirUp);
 
-
-	glm::mat4 identit(1);
-	identit = glm::rotate(identit, scale, glm::vec3(Matrixs.ViewMatrix[1]));
-	Matrixs.ViewMatrix[2] = identit* Matrixs.ViewMatrix[2];
-
-	// Map uniform buffer and update it
-	uint8_t *pData;
-	vkMapMemory(Devaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
-	memcpy(pData, &Matrixs, sizeof(Matrixs));
-	// Unmap after data has been copied
-	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-	vkUnmapMemory(Devaice.GetLogicDevice(), memory);
+	dirView = glm::vec3(identity * glm::vec4(dirView, 0.0f));
+	Update();
 }
 
 void MatrixBuffer::RotateRight()
 {
 	glm::mat4 identity(1);
-	identity = glm::rotate(identity, scale, glm::vec3(Matrixs.ViewMatrix[1]));
-	Matrixs.ViewMatrix[0] = identity* Matrixs.ViewMatrix[0];
-	Matrixs.ViewMatrix[3] = identity* Matrixs.ViewMatrix[3];
+	identity = glm::rotate(identity, -scale, dirUp);
 
-
-	glm::mat4 identit(1);
-	identit = glm::rotate(identit, scale, -glm::vec3(Matrixs.ViewMatrix[1]));
-	Matrixs.ViewMatrix[2] = identit* Matrixs.ViewMatrix[2];
-
-	// Map uniform buffer and update it
-	uint8_t *pData;
-	vkMapMemory(Devaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
-	memcpy(pData, &Matrixs, sizeof(Matrixs));
-	// Unmap after data has been copied
-	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-	vkUnmapMemory(Devaice.GetLogicDevice(), memory);
+	dirView = glm::vec3(identity * glm::vec4(dirView, 0.0f));
+	Update();
 }
 
 void MatrixBuffer::RotateZUp()
@@ -216,20 +173,14 @@ MatrixBuffer::MatrixBuffer(LogicDeviceWrapper LogicDevaice, int ScreenX, int Scr
 
 
 	// Update matrices
-	Matrixs.ProjectionMatrix = glm::perspective(glm::radians(60.0f), (float)ScreenX / (float)ScreenY, 0.1f, 256.0f);
-	Matrixs.ViewMatrix = glm::translate(glm::mat4(), glm::vec3(0.0f, 0.0f, zoom));
+	if (zoom == std::numeric_limits<float>::infinity())
+	{
+		Matrixs.ProjectionMatrix = glm::infinitePerspective(glm::radians(60.0f), (float)ScreenX / (float)ScreenY, 0.1f);
+	}
+	else
+	{
+		Matrixs.ProjectionMatrix = glm::perspective(glm::radians(60.0f), (float)ScreenX / (float)ScreenY, 0.1f, zoom);
+	}
 
-	/*
-	Matrixs.WorldMatrix = glm::mat4();
-	Matrixs.WorldMatrix = glm::rotate(Matrixs.WorldMatrix, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	Matrixs.WorldMatrix = glm::rotate(Matrixs.WorldMatrix, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-	Matrixs.WorldMatrix = glm::rotate(Matrixs.WorldMatrix, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-	*/
-	// Map uniform buffer and update it
-	uint8_t *pData;
-	vkMapMemory(LogicDevaice.GetLogicDevice(), memory, 0, sizeof(Matrixs), 0, (void **)&pData);
-	memcpy(pData, &Matrixs, sizeof(Matrixs));
-	// Unmap after data has been copied
-	// Note: Since we requested a host coherent memory type for the uniform buffer, the write is instantly visible to the GPU
-	vkUnmapMemory(LogicDevaice.GetLogicDevice(), memory);
+	Update();
 }
